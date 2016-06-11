@@ -51,10 +51,10 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 	private static final double ROTATION_DEAD_ZONE_SECTOR_SIZE = 0.05; //radians
 	
 	//platforming constants
-	private static final double PLAYER_JUMP_VELOCITY = 1200;
+	public static final double PLAYER_JUMP_VELOCITY = 1200;
 	private static final double PLAYER_HORIZONTAL_SPEED = 6000;
 	
-	public static final double GRAVITY = 4000;
+	public static final double GRAVITY = 6000;
 
 	
 	private ConcurrentHashMap<Integer, CopyOnWriteArrayList<Entity>> entities;
@@ -569,7 +569,7 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 		public void actionPerformed(ActionEvent ev) {
 			switch (key) {
 			case Z:
-				Stage.this.getPlayer().setVelocity(Stage.this.getPlayer().getVelocity().add(new Vec2(0,-PLAYER_JUMP_VELOCITY)));
+				Stage.this.getPlayer().setJumpButtonState(true);
 				break;
 			case X:
 				if (!fireSecondaryTimer.isRunning()) {
@@ -611,7 +611,7 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 		public void actionPerformed(ActionEvent ev) {
 			switch (weapon) {
 			case Z:
-				firePrimaryTimer.stop();
+				Stage.this.getPlayer().setJumpButtonState(false);
 				break;
 			case X:
 				fireSecondaryTimer.stop();

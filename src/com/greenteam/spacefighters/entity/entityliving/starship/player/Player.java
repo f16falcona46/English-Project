@@ -42,8 +42,9 @@ public class Player extends Starship {
 	
 	//platforming code
 	private static final double DRAG_COEFFICIENT = 0.01;
-	private static final double DRAG_X = 0.0001;
+	private static final double DRAG_X = 0.1;
 	private static final double DRAG_Y = 0.00002;
+	private static final double ANIMATION_MOVEMENT_INCREMENT = 40;
 	
 	private int timetofiremissile;
 	private int chargeLevel;
@@ -57,6 +58,11 @@ public class Player extends Starship {
 	private int money;
 	private HashSet<Powerup> powerups;
 	private int lives;
+	private MovementState movementState;
+	private Direction dir;
+	private boolean jumpButtonPressed;
+	private double lastAnimationMovement;
+	private double lastY;
 
 	public Player(Stage s, int maxHealth, int health, PlayerShipColor color) {
 		super(s, maxHealth, health, DEFAULTARMORLEVEL, DEFAULTWEAPONRYLEVEL);
@@ -135,7 +141,75 @@ public class Player extends Starship {
 		super.update(ms);
 		time += ms;
 		
-		System.out.println(this.getVelocity());
+		if (this.getPosition().getX() > Stage.WIDTH) {
+			this.getPosition().setX(Stage.WIDTH);
+		}
+		if (this.getPosition().getX() < 0) {
+			this.getPosition().setX(0);
+		}
+		if (this.getPosition().getY() > Stage.HEIGHT) {
+			this.getPosition().setY(Stage.HEIGHT);
+			this.setVelocity(this.getVelocity().multiply(new Vec2(1,0)));
+		}
+		if (this.getPosition().getY() < 0) {
+			this.getPosition().setY(0);
+			this.setVelocity(this.getVelocity().multiply(new Vec2(1,0)));
+		}
+		
+		double deltaY = this.getPosition().getY() - lastY;
+		lastY = this.getPosition().getY();
+		
+		if (deltaY < 0) {
+			this.movementState = MovementState.JUMPUP;
+		}
+		else if (deltaY > 0) {
+			this.movementState = MovementState.JUMPFALL;
+		}
+		else {
+			if (this.getVelocity().getX() == 0) {
+				this.movementState = MovementState.STATIONARY;
+			}
+			else {
+				if (Math.abs(this.getPosition().getX() - lastAnimationMovement) > ANIMATION_MOVEMENT_INCREMENT) {
+					lastAnimationMovement = this.getPosition().getX();
+					switch (this.movementState) {
+					case HORIZ1:
+						this.movementState = MovementState.HORIZ2;
+						break;
+					case HORIZ2:
+						this.movementState = MovementState.HORIZ3;
+						break;
+					case HORIZ3:
+						this.movementState = MovementState.HORIZ1;
+						break;
+					default:
+						this.movementState = MovementState.HORIZ1;
+						break;
+					}
+				}
+			}
+		}
+		
+		if (this.getVelocity().getX() > 0) {
+			this.dir = Direction.RIGHT;
+		}
+		else if (this.getVelocity().getX() < 0) {
+			this.dir = Direction.LEFT;
+		}
+		
+		if (jumpButtonPressed && ((movementState == MovementState.JUMPUP) || (movementState == MovementState.JUMPFALL))) {
+			this.getAcceleration().setY(Stage.GRAVITY/3);
+		}
+		else {
+			this.getAcceleration().setY(Stage.GRAVITY);
+		}
+		
+		if (jumpButtonPressed && (movementState != MovementState.JUMPFALL) && (movementState != MovementState.JUMPUP)) {
+			System.out.println(this.getVelocity().getY()-Stage.PLAYER_JUMP_VELOCITY);
+			this.getVelocity().setY(this.getVelocity().getY()-Stage.PLAYER_JUMP_VELOCITY);
+		}
+		
+		//System.out.println(movementState);
 		
 		if (time > HEALTH_REGEN_TIME) {
 			if (this.getHealth() < this.getMaxHealth()) {
@@ -159,20 +233,6 @@ public class Player extends Starship {
 				}
 			}
 		}
-		if (this.getPosition().getX() > Stage.WIDTH) {
-			this.getPosition().setX(Stage.WIDTH);
-		}
-		if (this.getPosition().getX() < 0) {
-			this.getPosition().setX(0);
-		}
-		if (this.getPosition().getY() > Stage.HEIGHT) {
-			this.getPosition().setY(Stage.HEIGHT);
-			this.setVelocity(this.getVelocity().multiply(new Vec2(1,0)));
-		}
-		if (this.getPosition().getY() < 0) {
-			this.getPosition().setY(0);
-			this.setVelocity(this.getVelocity().multiply(new Vec2(1,0)));
-		}
 		boolean hasAugmentedCharge = this.getCharge() > this.getMaxCharge();
 		if (!hasAugmentedCharge) {
 			chargeLevel += ms/5;
@@ -186,9 +246,11 @@ public class Player extends Starship {
 		this.getVelocity().setY(this.getVelocity().getY() - dragY);
 		
 		double speedX = getVelocity().getX();
-		double dragX = speedX * speedX * DRAG_X * Math.signum(speedX);
+		double dragX = Math.abs(speedX) * DRAG_X * Math.signum(speedX);
 		this.getVelocity().setX(this.getVelocity().getX() - dragX);
 		if (this.getVelocity().magnitude() < 30) this.setVelocity(Vec2.ZERO);
+		
+		
 	}
 
 	@Override
@@ -390,4 +452,20 @@ public class Player extends Starship {
 	public void setLives(int lives) {
 		this.lives = lives;
 	}
+	
+	public void setJumpButtonState(boolean state) {
+		this.jumpButtonPressed = state;
+	}
+	
+	public boolean getJumpButtonState() {
+		return this.jumpButtonPressed;
+	}
+}
+
+enum MovementState {
+	STATIONARY, HORIZ1, HORIZ2, HORIZ3, JUMPUP, JUMPFALL
+}
+
+enum Direction {
+	LEFT, RIGHT
 }
