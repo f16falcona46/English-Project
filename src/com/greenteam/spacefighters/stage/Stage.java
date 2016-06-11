@@ -49,6 +49,12 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 	private static final double ALL_MOVEMENT_DEAD_ZONE = 20;
 	private static final double LINEAR_MOVEMENT_DEAD_ZONE = 120;
 	private static final double ROTATION_DEAD_ZONE_SECTOR_SIZE = 0.05; //radians
+	
+	//platforming constants
+	private static final double PLAYER_JUMP_VELOCITY = 1200;
+	private static final double PLAYER_HORIZONTAL_SPEED = 6000;
+	
+	public static final double GRAVITY = 4000;
 
 	
 	private ConcurrentHashMap<Integer, CopyOnWriteArrayList<Entity>> entities;
@@ -114,16 +120,16 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 		
 		KeyboardInputHandlerHolder.handler.addPressedAction("SPACE", new PauseAction());
 		
-		KeyboardInputHandlerHolder.handler.addPressedAction("Z", new FireKeyPressed(FireKey.PRIMARY));
-		KeyboardInputHandlerHolder.handler.addPressedAction("X", new FireKeyPressed(FireKey.SECONDARY));
-		KeyboardInputHandlerHolder.handler.addPressedAction("C", new FireKeyPressed(FireKey.TERTIARY));
-		KeyboardInputHandlerHolder.handler.addPressedAction("F", new FireKeyPressed(FireKey.QUATERNARY));
+		KeyboardInputHandlerHolder.handler.addPressedAction("Z", new FireKeyPressed(FireKey.Z));
+		KeyboardInputHandlerHolder.handler.addPressedAction("X", new FireKeyPressed(FireKey.X));
+		KeyboardInputHandlerHolder.handler.addPressedAction("C", new FireKeyPressed(FireKey.C));
+		KeyboardInputHandlerHolder.handler.addPressedAction("F", new FireKeyPressed(FireKey.F));
 		KeyboardInputHandlerHolder.handler.addPressedAction("V", new FireKeyPressed(FireKey.CHAINBEAM));
 		
-		KeyboardInputHandlerHolder.handler.addReleasedAction("Z", new FireKeyReleased(FireKey.PRIMARY));
-		KeyboardInputHandlerHolder.handler.addReleasedAction("X", new FireKeyReleased(FireKey.SECONDARY));
-		KeyboardInputHandlerHolder.handler.addReleasedAction("C", new FireKeyReleased(FireKey.TERTIARY));
-		KeyboardInputHandlerHolder.handler.addReleasedAction("F", new FireKeyReleased(FireKey.QUATERNARY));
+		KeyboardInputHandlerHolder.handler.addReleasedAction("Z", new FireKeyReleased(FireKey.Z));
+		KeyboardInputHandlerHolder.handler.addReleasedAction("X", new FireKeyReleased(FireKey.X));
+		KeyboardInputHandlerHolder.handler.addReleasedAction("C", new FireKeyReleased(FireKey.C));
+		KeyboardInputHandlerHolder.handler.addReleasedAction("F", new FireKeyReleased(FireKey.F));
 		KeyboardInputHandlerHolder.handler.addReleasedAction("V", new FireKeyReleased(FireKey.CHAINBEAM));
 		
 		this.starfields = new BufferedImage[STARFIELD_LAYERS];
@@ -286,14 +292,14 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 			}
 			
 			if (leftKeyPressed && !rightKeyPressed) {
-				player.setOrientation(player.getOrientation().rotate(Vec2.ZERO, Math.PI / 32));
+				//player.setOrientation(player.getOrientation().rotate(Vec2.ZERO, Math.PI / 32));
 				if (upKeyPressed && !downKeyPressed) {
 					doUpKey();
 				} else if (downKeyPressed && !upKeyPressed) {
 					doDownKey();
 				}
 			} else if (rightKeyPressed && !leftKeyPressed) {
-				player.setOrientation(player.getOrientation().rotate(Vec2.ZERO, -Math.PI / 32));
+				//player.setOrientation(player.getOrientation().rotate(Vec2.ZERO, -Math.PI / 32));
 				if (upKeyPressed && !downKeyPressed) {
 					doUpKey();
 				} else if (downKeyPressed && !upKeyPressed) {
@@ -489,11 +495,13 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 				case LEFT:
 				{
 					leftKeyPressed = true;
+					Stage.this.getPlayer().setAcceleration(Stage.this.getPlayer().getAcceleration().multiply(new Vec2(0,1)).add(new Vec2(-PLAYER_HORIZONTAL_SPEED,0)));
 				}
 					break;
 				case RIGHT:
 				{
 					rightKeyPressed = true;
+					Stage.this.getPlayer().setAcceleration(Stage.this.getPlayer().getAcceleration().multiply(new Vec2(0,1)).add(new Vec2(PLAYER_HORIZONTAL_SPEED,0)));
 				}
 					break;
 				case FORWARD:
@@ -527,9 +535,11 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 				switch (key) {
 				case LEFT:
 					leftKeyPressed = false;
+					Stage.this.getPlayer().setAcceleration(Stage.this.getPlayer().getAcceleration().multiply(new Vec2(0,1)));
 					break;
 				case RIGHT:
 					rightKeyPressed = false;
+					Stage.this.getPlayer().setAcceleration(Stage.this.getPlayer().getAcceleration().multiply(new Vec2(0,1)));
 					break;
 				case FORWARD:
 					player.setVelocity(Vec2.ZERO);
@@ -549,34 +559,31 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 	private class FireKeyPressed extends AbstractAction {
 		private static final long serialVersionUID = -6212427508037713506L;
 		
-		private FireKey weapon;
+		private FireKey key;
 		
-		public FireKeyPressed(FireKey weapon) {
-			this.weapon = weapon;
+		public FireKeyPressed(FireKey key) {
+			this.key = key;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent ev) {
-			switch (weapon) {
-			case PRIMARY:
-				if (!firePrimaryTimer.isRunning()) {
-					firePrimaryTimer.restart();
-					firePrimaryTimer.start();
-				}
+			switch (key) {
+			case Z:
+				Stage.this.getPlayer().setVelocity(Stage.this.getPlayer().getVelocity().add(new Vec2(0,-PLAYER_JUMP_VELOCITY)));
 				break;
-			case SECONDARY:
+			case X:
 				if (!fireSecondaryTimer.isRunning()) {
 					fireSecondaryTimer.restart();
 					fireSecondaryTimer.start();
 				}
 				break;
-			case TERTIARY:
+			case C:
 				if (!fireTertiaryTimer.isRunning()) {
 					fireTertiaryTimer.restart();
 					fireTertiaryTimer.start();
 				}
 				break;
-			case QUATERNARY:
+			case F:
 				if (!fireQuaternaryTimer.isRunning()) {
 					fireQuaternaryTimer.restart();
 					fireQuaternaryTimer.start();
@@ -603,16 +610,16 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 		@Override
 		public void actionPerformed(ActionEvent ev) {
 			switch (weapon) {
-			case PRIMARY:
+			case Z:
 				firePrimaryTimer.stop();
 				break;
-			case SECONDARY:
+			case X:
 				fireSecondaryTimer.stop();
 				break;
-			case TERTIARY:
+			case C:
 				fireTertiaryTimer.stop();
 				break;
-			case QUATERNARY:
+			case F:
 				fireQuaternaryTimer.stop();
 				break;
 			default:
@@ -642,7 +649,7 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 	}
 	
 	private enum FireKey {
-		PRIMARY, SECONDARY, TERTIARY, QUATERNARY, CHAINBEAM
+		Z, X, C, F, CHAINBEAM
 	}
 	
 	@Override

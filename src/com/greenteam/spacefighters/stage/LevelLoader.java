@@ -62,6 +62,7 @@ public class LevelLoader implements ActionListener {
 		
 		Player player = new Player(stage, 100, 100, PlayerShipColor.RED);
 		player.setPosition(new Vec2(Stage.WIDTH / 2 , Stage.HEIGHT / 2));
+		player.setAcceleration(new Vec2(0, Stage.GRAVITY));
 		stage.setPlayer(player);
 		stage.setHUD(new HUD(stage));
 	}

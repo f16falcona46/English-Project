@@ -40,6 +40,11 @@ public class Player extends Starship {
 	private static final int MISSILE_SPREAD_COUNT = 6;
 	private static final int DEFAULT_LIVES = 3;
 	
+	//platforming code
+	private static final double DRAG_COEFFICIENT = 0.01;
+	private static final double DRAG_X = 0.0001;
+	private static final double DRAG_Y = 0.00002;
+	
 	private int timetofiremissile;
 	private int chargeLevel;
 	private int width;
@@ -130,6 +135,8 @@ public class Player extends Starship {
 		super.update(ms);
 		time += ms;
 		
+		System.out.println(this.getVelocity());
+		
 		if (time > HEALTH_REGEN_TIME) {
 			if (this.getHealth() < this.getMaxHealth()) {
 				this.setHealth(this.getHealth()+1);
@@ -160,9 +167,11 @@ public class Player extends Starship {
 		}
 		if (this.getPosition().getY() > Stage.HEIGHT) {
 			this.getPosition().setY(Stage.HEIGHT);
+			this.setVelocity(this.getVelocity().multiply(new Vec2(1,0)));
 		}
 		if (this.getPosition().getY() < 0) {
 			this.getPosition().setY(0);
+			this.setVelocity(this.getVelocity().multiply(new Vec2(1,0)));
 		}
 		boolean hasAugmentedCharge = this.getCharge() > this.getMaxCharge();
 		if (!hasAugmentedCharge) {
@@ -171,6 +180,15 @@ public class Player extends Starship {
 				chargeLevel = Player.FULLCHARGE;
 			}
 		}
+		//this.setAcceleration(this.getAcceleration().subtract(this.getVelocity().scale(DRAG_COEFFICIENT)));
+		double speedY = getVelocity().getY();
+		double dragY = speedY * speedY * DRAG_Y * Math.signum(speedY);
+		this.getVelocity().setY(this.getVelocity().getY() - dragY);
+		
+		double speedX = getVelocity().getX();
+		double dragX = speedX * speedX * DRAG_X * Math.signum(speedX);
+		this.getVelocity().setX(this.getVelocity().getX() - dragX);
+		if (this.getVelocity().magnitude() < 30) this.setVelocity(Vec2.ZERO);
 	}
 
 	@Override
