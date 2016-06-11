@@ -5,12 +5,14 @@ import java.awt.Composite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import com.greenteam.spacefighters.common.BoundRect;
 import com.greenteam.spacefighters.common.Vec2;
 import com.greenteam.spacefighters.entity.Entity;
 import com.greenteam.spacefighters.stage.Stage;
@@ -38,8 +40,8 @@ public class ExplosiveProjectile extends Projectile {
 	}
 	
 	@Override
-	public double getRadius() {
-		return hitRadius;
+	public BoundRect getBoundingBox() {
+		return new BoundRect(this.getPosition().getX(), this.getPosition().getY(), hitRadius, hitRadius);
 	}
 	
 	public static int getEnergyCost() {

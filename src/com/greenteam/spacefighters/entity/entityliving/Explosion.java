@@ -80,11 +80,6 @@ public class Explosion extends EntityLiving {
 	public int getDamage() {
 		return 0;
 	}
-	
-	@Override
-	public double getRadius() {
-		return -Double.MAX_VALUE;
-	}
 
 	@Override
 	public Class<?> getSourceClass() {

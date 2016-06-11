@@ -35,11 +35,12 @@ import com.greenteam.spacefighters.GUI.KeyboardInputHandlerHolder;
 import com.greenteam.spacefighters.GUI.Window;
 import com.greenteam.spacefighters.common.Vec2;
 import com.greenteam.spacefighters.entity.Entity;
+import com.greenteam.spacefighters.entity.entityliving.obstacle.Wall;
 import com.greenteam.spacefighters.entity.entityliving.starship.player.Player;
 
 public class Stage extends JPanel implements ActionListener, MouseListener {
-	public static final int WIDTH = 2400;
-	public static final int HEIGHT= 2400;
+	private static final int WIDTH = 2400;
+	private static final int HEIGHT= 600;
 	private static final long serialVersionUID = -2937557151448523567L;
 	private static final int NUM_STARS = 120;
 	private static final double BACKGROUND_SCROLL_SPEED = 2.5;
@@ -360,6 +361,10 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 		if (!entities.containsKey(entity.getDefaultLayer()))
 			entities.put(entity.getDefaultLayer(), new CopyOnWriteArrayList<Entity>());
 		entities.get(entity.getDefaultLayer()).add(entity);
+		for (CopyOnWriteArrayList<Entity> e : entities.values()) {
+			System.out.print(e.size()+" ");
+		}
+		System.out.println();
 	}
 
 	public Player getPlayer() {
@@ -476,6 +481,14 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 			}
 		}
 	    return nearestEntity;
+	}
+	
+	public double getCanvasHeight() {
+		return Stage.HEIGHT;
+	}
+	
+	public double getCanvasWidth() {
+		return Stage.WIDTH;
 	}
 	
 	private class MoveActionPressed extends AbstractAction {

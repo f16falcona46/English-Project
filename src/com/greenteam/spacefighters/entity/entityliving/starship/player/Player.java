@@ -2,6 +2,7 @@ package com.greenteam.spacefighters.entity.entityliving.starship.player;
 
 import java.awt.Graphics;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.util.HashSet;
@@ -9,15 +10,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.imageio.ImageIO;
 
+import com.greenteam.spacefighters.common.BoundRect;
+import com.greenteam.spacefighters.common.Color;
+import com.greenteam.spacefighters.common.RectCollisionSide;
 import com.greenteam.spacefighters.common.Vec2;
 import com.greenteam.spacefighters.entity.Entity;
 import com.greenteam.spacefighters.entity.entityliving.EntityLiving;
 import com.greenteam.spacefighters.entity.entityliving.Explosion;
 import com.greenteam.spacefighters.entity.entityliving.obstacle.Obstacle;
-import com.greenteam.spacefighters.entity.entityliving.powerup.ChainBeamPowerup;
-import com.greenteam.spacefighters.entity.entityliving.powerup.Powerup;
-import com.greenteam.spacefighters.entity.entityliving.powerupcontainer.ChargeBoostPowerupContainer;
-import com.greenteam.spacefighters.entity.entityliving.powerupcontainer.PowerupContainer;
 import com.greenteam.spacefighters.entity.entityliving.projectile.ExplosiveProjectile;
 import com.greenteam.spacefighters.entity.entityliving.projectile.HomingProjectile;
 import com.greenteam.spacefighters.entity.entityliving.projectile.LinearProjectile;
@@ -41,10 +41,11 @@ public class Player extends Starship {
 	private static final int DEFAULT_LIVES = 3;
 	
 	//platforming code
-	private static final double DRAG_COEFFICIENT = 0.01;
 	private static final double DRAG_X = 0.1;
 	private static final double DRAG_Y = 0.00002;
 	private static final double ANIMATION_MOVEMENT_INCREMENT = 40;
+	private static final double BOUNDING_BOX_WIDTH = 18;
+	private static final double BOUNDING_BOX_HEIGHT = 36;
 	
 	private int timetofiremissile;
 	private int chargeLevel;
@@ -55,34 +56,32 @@ public class Player extends Starship {
 	private int maxHealth;
 	private int time;
 	private int score;
-	private int money;
-	private HashSet<Powerup> powerups;
 	private int lives;
 	private MovementState movementState;
 	private Direction dir;
 	private boolean jumpButtonPressed;
 	private double lastAnimationMovement;
 	private double lastY;
+	private BoundRect boundingBox;
+	private RectCollisionSide collisionState;
 
 	public Player(Stage s, int maxHealth, int health, PlayerShipColor color) {
 		super(s, maxHealth, health, DEFAULTARMORLEVEL, DEFAULTWEAPONRYLEVEL);
 		this.maxHealth = health;
 		time = 0;
 		timetofiremissile = GUN_TO_MISSILE_RATIO;
-		money = 0;
 		score = 0;
 		this.setColor(color);
 		chargeLevel = FULLCHARGE;
-		powerups = new HashSet<Powerup>();
 		lives = DEFAULT_LIVES;
+		this.setBoundingBox(new BoundRect(this.getPosition().getX(), this.getPosition().getY(), BOUNDING_BOX_WIDTH, BOUNDING_BOX_HEIGHT));
 	}
 	
 	public void reset() {
 		this.setFullHealth();
 		this.setFullCharge();
-		this.setPosition(new Vec2(Stage.WIDTH / 2 , Stage.HEIGHT / 2));
+		this.setPosition(new Vec2(this.getStage().getCanvasWidth() / 2 , this.getStage().getCanvasHeight() / 2));
 		this.setOrientation(new Vec2(0,1));
-		this.removeAllPowuerups();
 	}
 	
 	public void setColor(PlayerShipColor color) {
@@ -129,6 +128,32 @@ public class Player extends Starship {
 			AffineTransform tf = AffineTransform.getRotateInstance(angle, imagemidx, imagemidy);
 			AffineTransformOp op = new AffineTransformOp(tf, AffineTransformOp.TYPE_BILINEAR);
 			g.drawImage(op.filter((BufferedImage)this.getTexture(), null), (int)(pos.getX()-imagemidx), (int)(pos.getY()-imagemidy), null);
+			
+			switch (this.movementState) {
+			case HORIZ1:
+				g.setColor(java.awt.Color.GREEN);
+				break;
+			case HORIZ2:
+				g.setColor(java.awt.Color.RED);
+				break;
+			case HORIZ3:
+				g.setColor(java.awt.Color.YELLOW);
+				break;
+			case JUMPUP:
+				g.setColor(java.awt.Color.PINK);
+				break;
+			case JUMPFALL:
+				g.setColor(java.awt.Color.BLUE);
+				break;
+			case STATIONARY:
+				g.setColor(java.awt.Color.WHITE);
+				break;
+			}
+			int x = (int)this.getBoundingBox().getX();
+			int y = (int)this.getBoundingBox().getY();
+			int w = (int)this.getBoundingBox().getWidth();
+			int h = (int)this.getBoundingBox().getHeight();
+			g.fillRect(x-w/2, y-h/2, w, h);
 		}
 		else {
 			g.setColor(noTextureColor(color));
@@ -138,17 +163,33 @@ public class Player extends Starship {
 	
 	@Override
 	public void update(int ms) {
-		super.update(ms);
+		Vec2 nextPos = this.getPosition().add(this.getVelocity().scale(((double)ms)/1000));
+		canMove(nextPos);
+		
+		System.out.println(this.collisionState);
 		time += ms;
 		
-		if (this.getPosition().getX() > Stage.WIDTH) {
-			this.getPosition().setX(Stage.WIDTH);
+		switch (collisionState) {
+		case LEFT:
+		case RIGHT:
+			this.getVelocity().setX(0);
+			break;
+		case TOP:
+		case BOTTOM:
+			this.getVelocity().setY(0);
+			break;
+		default:
+			break;
+		}
+		
+		if (this.getPosition().getX() > this.getStage().getCanvasWidth()) {
+			this.getPosition().setX(this.getStage().getCanvasWidth());
 		}
 		if (this.getPosition().getX() < 0) {
 			this.getPosition().setX(0);
 		}
-		if (this.getPosition().getY() > Stage.HEIGHT) {
-			this.getPosition().setY(Stage.HEIGHT);
+		if (this.getPosition().getY() > this.getStage().getCanvasHeight()) {
+			this.getPosition().setY(this.getStage().getCanvasHeight());
 			this.setVelocity(this.getVelocity().multiply(new Vec2(1,0)));
 		}
 		if (this.getPosition().getY() < 0) {
@@ -204,12 +245,9 @@ public class Player extends Starship {
 			this.getAcceleration().setY(Stage.GRAVITY);
 		}
 		
-		if (jumpButtonPressed && (movementState != MovementState.JUMPFALL) && (movementState != MovementState.JUMPUP)) {
-			System.out.println(this.getVelocity().getY()-Stage.PLAYER_JUMP_VELOCITY);
+		if (jumpButtonPressed && (collisionState == RectCollisionSide.BOTTOM)) {
 			this.getVelocity().setY(this.getVelocity().getY()-Stage.PLAYER_JUMP_VELOCITY);
 		}
-		
-		//System.out.println(movementState);
 		
 		if (time > HEALTH_REGEN_TIME) {
 			if (this.getHealth() < this.getMaxHealth()) {
@@ -222,14 +260,9 @@ public class Player extends Starship {
 	    		if (e == this) continue;
 	    		if (this.overlaps(e) &&
 	    			(Obstacle.class.isAssignableFrom(e.getSourceClass()) ||
-	    			 Enemy.class.isAssignableFrom(e.getSourceClass()) 	||
-	    			 PowerupContainer.class.isAssignableFrom(e.getSourceClass())) &&
+	    			 Enemy.class.isAssignableFrom(e.getSourceClass())) &&
 	    			e instanceof EntityLiving && !((EntityLiving)e).isDead()) {
 	    			((EntityLiving)e).damage(this, this.getDamage());
-	    			boolean augmentChargePowerup = e instanceof ChargeBoostPowerupContainer;
-	    			if (augmentChargePowerup) {
-	    				chargeLevel = Math.min(chargeLevel + Player.FULLCHARGE, 2 * Player.FULLCHARGE);
-	    			}
 				}
 			}
 		}
@@ -240,7 +273,7 @@ public class Player extends Starship {
 				chargeLevel = Player.FULLCHARGE;
 			}
 		}
-		//this.setAcceleration(this.getAcceleration().subtract(this.getVelocity().scale(DRAG_COEFFICIENT)));
+		
 		double speedY = getVelocity().getY();
 		double dragY = speedY * speedY * DRAG_Y * Math.signum(speedY);
 		this.getVelocity().setY(this.getVelocity().getY() - dragY);
@@ -250,17 +283,12 @@ public class Player extends Starship {
 		this.getVelocity().setX(this.getVelocity().getX() - dragX);
 		if (this.getVelocity().magnitude() < 30) this.setVelocity(Vec2.ZERO);
 		
-		
+		super.update(ms);
 	}
 
 	@Override
 	public Class<?> getSourceClass() {
 		return this.getClass();
-	}
-	
-	@Override
-	public double getRadius() {
-		return 20;
 	}
 
 	@Override
@@ -315,9 +343,7 @@ public class Player extends Starship {
 			break;
 			case 4 :
 			{
-				if (hasPowerup(ChainBeamPowerup.class)) {
-					((ChainBeamPowerup)getPowerup(ChainBeamPowerup.class)).fire();
-				}
+				
 			}
 			break;
 			default :
@@ -339,37 +365,6 @@ public class Player extends Starship {
 		}
 	}
 	
-	public void addPowerup(Powerup p) {
-		for (Powerup powerup : powerups) {
-			if (p.getClass().isInstance(powerup)) {
-				powerup.resetTime();
-				return;
-			}
-		}
-		powerups.add(p);
-		this.getStage().add(p);
-	}
-	
-	public Powerup getPowerup(Class<?> cl) {
-		for (Powerup p : powerups)
-			if (cl.isInstance(p))
-				return p;
-		return null;
-	}
-	
-	public void removePowerup(Powerup p) {
-		powerups.remove(p);
-		p.remove();
-	}
-	
-	public void removeAllPowuerups() {
-		powerups.clear();
-	}
-	
-	public boolean hasPowerup(Class<?> cl) {
-		return getPowerup(cl) != null;
-	}
-	
 	public void setMaxHealth(int max) {
 		this.maxHealth = max;
 	}
@@ -389,6 +384,11 @@ public class Player extends Starship {
 	@Override
 	public int getDamage() {
 		return 50;
+	}
+	
+	@Override
+	public void damage(Entity e, int i) {
+		//do nothing
 	}
 	
 	public static BufferedImage getTexFromEnum(PlayerShipColor color) {
@@ -440,14 +440,6 @@ public class Player extends Starship {
 	public void setScore(int score) {
 		this.score = score;
 	}
-	
-	public int getMoney() {
-		return money;
-	}
-	
-	public void setMoney(int money) {
-		this.money = money;
-	}
 
 	public void setLives(int lives) {
 		this.lives = lives;
@@ -459,6 +451,32 @@ public class Player extends Starship {
 	
 	public boolean getJumpButtonState() {
 		return this.jumpButtonPressed;
+	}
+
+	public void setBoundingBox(BoundRect box) {
+		this.boundingBox = box;
+	}
+	
+	@Override
+	public BoundRect getBoundingBox() {
+		return this.boundingBox;
+	}
+	
+	@Override
+	public boolean canMove(Vec2 newPos) {
+		BoundRect rect = new BoundRect(newPos.getX(), newPos.getY(), this.getBoundingBox().getWidth(), this.getBoundingBox().getHeight());
+		for (CopyOnWriteArrayList<Entity> entities : this.getStage().getEntities().values()) {
+			for (Entity e : entities) {
+				if (e == this) continue;
+				if (rect.intersects(e.getBoundingBox())) {
+					System.out.println(rect.whichSideIntersected(e.getBoundingBox()));
+					this.collisionState = rect.whichSideIntersected(e.getBoundingBox());
+					return false;
+				}
+			}
+		}
+		this.collisionState = RectCollisionSide.NONE;
+		return true;
 	}
 }
 

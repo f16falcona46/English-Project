@@ -6,8 +6,10 @@ import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
+import com.greenteam.spacefighters.common.BoundRect;
 import com.greenteam.spacefighters.common.Vec2;
 import com.greenteam.spacefighters.stage.Stage;
 
@@ -17,6 +19,7 @@ public abstract class Entity {
 	private Vec2 acceleration;
 	private Vec2 orientation;
 	private boolean updatable;
+	private BoundRect rect;
 	protected Image texture;
 	private Stage stage;
 	
@@ -27,6 +30,7 @@ public abstract class Entity {
 		orientation = new Vec2(0, 1);
 		updatable = true;
 		texture = null;
+		rect = new BoundRect(0,0,-1,-1);
 		stage = s;
 	}
 	
@@ -37,8 +41,17 @@ public abstract class Entity {
 	}
 	
 	public void update(int ms) {
+		this.getBoundingBox().setX(this.getPosition().getX());
+		this.getBoundingBox().setY(this.getPosition().getY());
+		Vec2 newPosition = position.add(velocity.scale(((double)ms)/1000));
+		if (this.canMove(newPosition)) {
+			position = newPosition;
+		}
 		velocity = velocity.add(acceleration.scale(((double)ms)/1000));
-		position = position.add(velocity.scale(((double)ms)/1000));
+	}
+	
+	public boolean canMove(Vec2 newPosition) {
+		return true;
 	}
 	
 	public void setUpdatable(boolean updatable) {
@@ -47,30 +60,6 @@ public abstract class Entity {
 	
 	public boolean isUpdatable() {
 		return updatable;
-	}
-	
-	public Vec2 randSpawnPos(Entity e, double minDist) {
-		Vec2 spawnPos = new Vec2(this.getRadius(), this.getRadius()).add(Vec2.random(Stage.WIDTH - 2 * this.getRadius(), Stage.HEIGHT - 2 * this.getRadius()));
-		Vec2 entityPos = e.getPosition();
-		double dist = entityPos.distance(spawnPos);
-		if (dist < minDist) {
-			Vec2 player2Enemy = spawnPos.subtract(entityPos);
-			spawnPos = spawnPos.add(player2Enemy.scale(minDist / dist));
-			int i = 0;
-			while (!Stage.inStage(spawnPos)) {
-				if (i < 3) {
-					spawnPos = spawnPos.rotate(entityPos, Math.PI / 2);
-					i++;
-				} else {
-					System.err.println("Entity placement failed!");
-					System.err.println("Player:\t" + entityPos);
-					System.err.println("Entity:\t" + spawnPos);
-					spawnPos = Vec2.ZERO;
-					break;
-				}
-			}
-		}
-		return spawnPos;
 	}
 
 	public Vec2 getOrientation() {
@@ -142,12 +131,12 @@ public abstract class Entity {
 	    }
 	}
 	
-	public double getRadius() {
-		return 5;
+	public BoundRect getBoundingBox() {
+		return rect;
 	}
 	
 	public boolean overlaps(Entity e) {
-		return this.getPosition().distance(e.getPosition()) < this.getRadius() + e.getRadius();
+		return this.getBoundingBox().intersects(e.getBoundingBox());
 	}
 	
 	public abstract Class<?> getSourceClass();

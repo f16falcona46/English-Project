@@ -3,8 +3,6 @@ package com.greenteam.spacefighters.GUI.tutorial;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import com.greenteam.spacefighters.GUI.Window;
-import com.greenteam.spacefighters.entity.entityliving.powerupcontainer.PowerupContainer;
-import com.greenteam.spacefighters.entity.entityliving.powerupcontainer.PowerupContainer.PowerupColor;
 
 public class PowerupTutorialScreen extends TutorialScreen {
 	private static final long serialVersionUID = 7246934844521923388L;
@@ -25,12 +23,7 @@ public class PowerupTutorialScreen extends TutorialScreen {
 	
 	public PowerupTutorialScreen(Window w) {
 		super(w);
-		for (PowerupColor color : PowerupColor.values()) {
-			if (!color.equals(PowerupColor.ORANGE)) {
-				int i = color.ordinal();
-				this.addTutorialComponent(i, PowerupContainer.getTexFromEnum(color), infoName[i], infoDescription[i]);
-			}
-		}
+		
 	}
 
 	@Override

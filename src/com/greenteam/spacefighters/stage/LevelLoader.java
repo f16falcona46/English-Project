@@ -12,8 +12,7 @@ import com.greenteam.spacefighters.GUI.HUD;
 import com.greenteam.spacefighters.GUI.Window;
 import com.greenteam.spacefighters.common.Vec2;
 import com.greenteam.spacefighters.entity.Entity;
-import com.greenteam.spacefighters.entity.entityliving.obstacle.asteroid.Asteroid;
-import com.greenteam.spacefighters.entity.entityliving.powerupcontainer.*;
+import com.greenteam.spacefighters.entity.entityliving.obstacle.Wall;
 import com.greenteam.spacefighters.entity.entityliving.starship.enemy.*;
 import com.greenteam.spacefighters.entity.entityliving.starship.player.Player;
 import com.greenteam.spacefighters.entity.entityliving.starship.player.Player.PlayerShipColor;
@@ -61,9 +60,10 @@ public class LevelLoader implements ActionListener {
 		this.setDifficulty(difficulty);
 		
 		Player player = new Player(stage, 100, 100, PlayerShipColor.RED);
-		player.setPosition(new Vec2(Stage.WIDTH / 2 , Stage.HEIGHT / 2));
+		player.setPosition(new Vec2(stage.getCanvasWidth() / 2 , stage.getCanvasHeight() / 2));
 		player.setAcceleration(new Vec2(0, Stage.GRAVITY));
 		stage.setPlayer(player);
+		
 		stage.setHUD(new HUD(stage));
 	}
 	
@@ -72,6 +72,36 @@ public class LevelLoader implements ActionListener {
 		Player p = stage.getPlayer();
 		for (CopyOnWriteArrayList<Entity> array : stage.getEntities().values())
 			array.clear();
+		
+		Wall wall = new Wall(stage, Integer.MAX_VALUE);
+		wall.getBoundingBox().setHeight(50);
+		wall.getBoundingBox().setWidth(300);
+		wall.setPosition(new Vec2(stage.getCanvasWidth()/2, stage.getCanvasHeight()/2+200));
+		System.out.println(wall.getBoundingBox());
+		stage.add(wall);
+		
+		wall = new Wall(stage, Integer.MAX_VALUE);
+		wall.getBoundingBox().setHeight(50);
+		wall.getBoundingBox().setWidth(300);
+		wall.setPosition(new Vec2(stage.getCanvasWidth()/2+500, stage.getCanvasHeight()/2+60));
+		System.out.println(wall.getBoundingBox());
+		stage.add(wall);
+		
+		wall = new Wall(stage, Integer.MAX_VALUE);
+		wall.getBoundingBox().setHeight(50);
+		wall.getBoundingBox().setWidth(300);
+		wall.setPosition(new Vec2(stage.getCanvasWidth()/2+200, stage.getCanvasHeight()/2-100));
+		System.out.println(wall.getBoundingBox());
+		stage.add(wall);
+		
+		wall = new Wall(stage, Integer.MAX_VALUE);
+		wall.getBoundingBox().setHeight(50);
+		wall.getBoundingBox().setWidth(stage.getCanvasWidth());
+		wall.setPosition(new Vec2(stage.getCanvasWidth()/2, stage.getCanvasHeight()));
+		System.out.println(wall.getBoundingBox());
+		stage.add(wall);
+		
+		
 		stage.add(p);
 		p.reset();
 	}
@@ -82,7 +112,7 @@ public class LevelLoader implements ActionListener {
 		if (level == 2) {
 			for (int i = 0; i < ASTEROID_COUNT; i++) {
 				int size = (int)((ASTEROID_MAXSIZE - ASTEROID_MINSIZE) * Math.random()) + ASTEROID_MINSIZE;
-				stage.add(new Asteroid(stage, size));
+				//stage.add(new Asteroid(stage, size));
 			}
 		}
 		((CardLayout)stage.getParent().getLayout()).show(stage.getParent(), Window.LEVELINCREMENTSCREEN);
@@ -102,6 +132,7 @@ public class LevelLoader implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent ev) {
+		/*
 		if (ev.getSource() == timer) {
 			time += timer.getDelay();
 			if ((time % (int)(TESTENEMY_SPAWNINTERVAL*LEVEL_INTERVAL_RATIOS[level])) == 0) {
@@ -148,6 +179,7 @@ public class LevelLoader implements ActionListener {
 		if ((level < levelScoreThresholds.length) && (stage.getPlayer().getScore() >= levelScoreThresholds[level])) {
 			nextLevel();
 		}
+		*/
 	}
 	
 	public String getLevelBlurb() {

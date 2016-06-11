@@ -5,7 +5,6 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 
-import com.greenteam.spacefighters.entity.entityliving.powerup.ChainBeamPowerup;
 import com.greenteam.spacefighters.entity.entityliving.starship.player.Player;
 import com.greenteam.spacefighters.stage.Stage;
 
@@ -44,14 +43,6 @@ public class HUD {
 			g.drawImage(tex, texOffsetX + i * (width + width / 2), 59, width, height, null);	
 		}
 		g.drawString("CHARGE", 215, 50);
-		
-		if (p.hasPowerup(ChainBeamPowerup.class)) {
-			g.setColor(new Color(120, 75, 220));
-			g.fillOval(10, 104, 20, 20);
-			g.setColor(Color.WHITE);
-			g.setFont(f);
-			g.drawString("Chainbeam ready", 40, 119);
-		}
 		
 		int health = p.getHealth();
 		if (health < 0) health = 0;

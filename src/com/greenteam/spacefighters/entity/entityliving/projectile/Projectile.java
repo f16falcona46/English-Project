@@ -52,9 +52,9 @@ public abstract class Projectile extends EntityLiving {
 	@Override
 	public void update(int ms) {
 		super.update(ms);
-		if ((this.getPosition().getX() > Stage.WIDTH) ||
+		if ((this.getPosition().getX() > this.getStage().getCanvasWidth()) ||
 				(this.getPosition().getX() < 0) ||
-				(this.getPosition().getY() > Stage.HEIGHT) ||
+				(this.getPosition().getY() > this.getStage().getCanvasHeight()) ||
 				(this.getPosition().getY() < 0)) {
 			diedDueToOutofRange = true;
 			this.getStage().remove(this);
