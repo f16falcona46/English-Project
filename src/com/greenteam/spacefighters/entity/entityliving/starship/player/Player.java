@@ -1,11 +1,14 @@
 package com.greenteam.spacefighters.entity.entityliving.starship.player;
 
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.imageio.ImageIO;
@@ -64,6 +67,8 @@ public class Player extends Starship {
 	private double lastY;
 	private BoundRect boundingBox;
 	private RectCollisionSide collisionState;
+	
+	private Map<MovementState, BufferedImage> textures;
 
 	public Player(Stage s, int maxHealth, int health, PlayerShipColor color) {
 		super(s, maxHealth, health, DEFAULTARMORLEVEL, DEFAULTWEAPONRYLEVEL);
@@ -74,6 +79,7 @@ public class Player extends Starship {
 		this.setColor(color);
 		chargeLevel = FULLCHARGE;
 		lives = DEFAULT_LIVES;
+		loadImages();
 		this.setBoundingBox(new BoundRect(this.getPosition().getX(), this.getPosition().getY(), BOUNDING_BOX_WIDTH, BOUNDING_BOX_HEIGHT));
 	}
 	
@@ -122,13 +128,7 @@ public class Player extends Starship {
 	public void render(Graphics g) {
 		Vec2 pos = this.getPosition();
 		if (couldLoadImage) {
-			double angle = this.getOrientation().angle();
-			double imagemidx = this.getTexture().getWidth(null)/2;
-			double imagemidy = this.getTexture().getHeight(null)/2;
-			AffineTransform tf = AffineTransform.getRotateInstance(angle, imagemidx, imagemidy);
-			AffineTransformOp op = new AffineTransformOp(tf, AffineTransformOp.TYPE_BILINEAR);
-			g.drawImage(op.filter((BufferedImage)this.getTexture(), null), (int)(pos.getX()-imagemidx), (int)(pos.getY()-imagemidy), null);
-			
+			/*
 			switch (this.movementState) {
 			case HORIZ1:
 				g.setColor(java.awt.Color.GREEN);
@@ -149,11 +149,22 @@ public class Player extends Starship {
 				g.setColor(java.awt.Color.WHITE);
 				break;
 			}
+			*/
 			int x = (int)this.getBoundingBox().getX();
 			int y = (int)this.getBoundingBox().getY();
 			int w = (int)this.getBoundingBox().getWidth();
 			int h = (int)this.getBoundingBox().getHeight();
-			g.fillRect(x-w/2, y-h/2, w, h);
+			//g.fillRect(x-w/2, y-h/2, w, h);
+			BufferedImage tex = textures.get(movementState);
+			
+			AffineTransform tx = null;
+			if (dir == Direction.LEFT) {
+				tx = AffineTransform.getScaleInstance(-1, 1);
+				tx.translate(-w, 0);
+				AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+				tex = op.filter(tex, null);
+			}
+			g.drawImage(tex, x-w/2, y-h/2, w, h, null);
 		}
 		else {
 			g.setColor(noTextureColor(color));
@@ -407,6 +418,34 @@ public class Player extends Starship {
 			}
 		} catch(Exception e) {
 			return null;
+		}
+	}
+	
+	public void loadImages() {
+		try {
+			textures = new HashMap<MovementState, BufferedImage>();
+			for (MovementState state : MovementState.values()) {
+				switch (state) {
+				case STATIONARY:
+				case HORIZ3:
+					textures.put(state, ImageIO.read(Player.class.getResource("/com/greenteam/spacefighters/assets/gatsby/nick1.png")));
+					break;
+				case HORIZ1:
+					textures.put(state, ImageIO.read(Player.class.getResource("/com/greenteam/spacefighters/assets/gatsby/nick2.png")));
+					break;
+				case HORIZ2:
+					textures.put(state, ImageIO.read(Player.class.getResource("/com/greenteam/spacefighters/assets/gatsby/nick3.png")));
+					break;
+				case JUMPUP:
+					textures.put(state, ImageIO.read(Player.class.getResource("/com/greenteam/spacefighters/assets/gatsby/nick5.png")));
+					break;
+				case JUMPFALL:
+					textures.put(state, ImageIO.read(Player.class.getResource("/com/greenteam/spacefighters/assets/gatsby/nick6.png")));
+					break;
+				}
+			}
+		} catch(Exception e) {
+			return;
 		}
 	}
 	

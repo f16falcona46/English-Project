@@ -55,7 +55,7 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 	public static final double PLAYER_JUMP_VELOCITY = 1200;
 	private static final double PLAYER_HORIZONTAL_SPEED = 6000;
 	
-	public static final double GRAVITY = 6000;
+	public static final double GRAVITY = 9000;
 
 	
 	private ConcurrentHashMap<Integer, CopyOnWriteArrayList<Entity>> entities;

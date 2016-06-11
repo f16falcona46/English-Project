@@ -73,34 +73,25 @@ public class LevelLoader implements ActionListener {
 		for (CopyOnWriteArrayList<Entity> array : stage.getEntities().values())
 			array.clear();
 		
-		Wall wall = new Wall(stage, Integer.MAX_VALUE);
-		wall.getBoundingBox().setHeight(50);
-		wall.getBoundingBox().setWidth(300);
-		wall.setPosition(new Vec2(stage.getCanvasWidth()/2, stage.getCanvasHeight()/2+200));
-		System.out.println(wall.getBoundingBox());
-		stage.add(wall);
+		for (int i = 0; i < stage.getCanvasWidth()/16+1; ++i) {
+			Wall wall = new Wall(stage, Integer.MAX_VALUE);
+			wall.getBoundingBox().setHeight(16);
+			wall.getBoundingBox().setWidth(16);
+			wall.setPosition(new Vec2(16*i+8, stage.getCanvasHeight()-8));
+			System.out.println(wall.getBoundingBox());
+			stage.add(wall);
+		}
 		
-		wall = new Wall(stage, Integer.MAX_VALUE);
-		wall.getBoundingBox().setHeight(50);
-		wall.getBoundingBox().setWidth(300);
-		wall.setPosition(new Vec2(stage.getCanvasWidth()/2+500, stage.getCanvasHeight()/2+60));
-		System.out.println(wall.getBoundingBox());
-		stage.add(wall);
-		
-		wall = new Wall(stage, Integer.MAX_VALUE);
-		wall.getBoundingBox().setHeight(50);
-		wall.getBoundingBox().setWidth(300);
-		wall.setPosition(new Vec2(stage.getCanvasWidth()/2+200, stage.getCanvasHeight()/2-100));
-		System.out.println(wall.getBoundingBox());
-		stage.add(wall);
-		
-		wall = new Wall(stage, Integer.MAX_VALUE);
-		wall.getBoundingBox().setHeight(50);
-		wall.getBoundingBox().setWidth(stage.getCanvasWidth());
-		wall.setPosition(new Vec2(stage.getCanvasWidth()/2, stage.getCanvasHeight()));
-		System.out.println(wall.getBoundingBox());
-		stage.add(wall);
-		
+		for (int j = 0; j < 10; ++j) {
+			for (int i = 0; i < 10; ++i) {
+				Wall wall = new Wall(stage, Integer.MAX_VALUE);
+				wall.getBoundingBox().setHeight(16);
+				wall.getBoundingBox().setWidth(16);
+				wall.setPosition(new Vec2(16*i+8+j*160, stage.getCanvasHeight()-8-j*80));
+				System.out.println(wall.getBoundingBox());
+				stage.add(wall);
+			}
+		}
 		
 		stage.add(p);
 		p.reset();

@@ -1,6 +1,8 @@
 package com.greenteam.spacefighters.common;
 
 public class BoundRect {
+	private static final double DELTA = -1;
+	
 	private double midX;
 	private double midY;
 	private double halfWidth;
@@ -68,7 +70,7 @@ public class BoundRect {
 		double wy = w*dy;
 		double hx = h*dx;
 		if (wy > hx) {
-			if (wy > -hx) {
+			if (wy + DELTA*wy > -hx) {
 				return RectCollisionSide.TOP;
 			}
 			else {
@@ -76,7 +78,7 @@ public class BoundRect {
 			}
 		}
 		else {
-			if (wy > -hx) {
+			if (wy - DELTA*wy > -hx) {
 				return RectCollisionSide.LEFT;
 			}
 			else {
