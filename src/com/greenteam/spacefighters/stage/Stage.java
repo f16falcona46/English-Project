@@ -174,7 +174,7 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
-		g.setColor(java.awt.Color.BLACK);
+		g.setColor(java.awt.Color.WHITE);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		
 		Vec2 offsetMax = new Vec2(WIDTH - this.getWidth(), HEIGHT - this.getHeight());
@@ -186,12 +186,14 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 		offset = offset.min(offsetMax).max(offsetMin);
 		g.translate(-(int)offset.getX(), -(int)offset.getY());
 		g.setClip((int)(offset.getX()), (int)(offset.getY()), (int)(offset.getX() + this.getWidth()), (int)(offset.getY() + this.getHeight()));
+		/*
 		for (int i = 0; i < STARFIELD_LAYERS; ++i) {
 			if (starfields[i] != null) {
 				g.drawImage(starfields[i], 0, 0, null);
 				g.drawImage(starfields[i], 0, 0, null);
 			}
 		}
+		*/
 		for (Entry<Integer, CopyOnWriteArrayList<Entity>> entry : entities.entrySet()) {
 			for (Entity e : entry.getValue()) {
 				if (e != player) {

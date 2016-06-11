@@ -18,7 +18,7 @@ public class Wall extends Obstacle {
 	
 	@Override
 	public void render(Graphics g) {
-		g.setColor(Color.WHITE);
+		g.setColor(Color.DARK_GRAY);
 		int x = (int)this.getBoundingBox().getX();
 		int y = (int)this.getBoundingBox().getY();
 		int w = (int)this.getBoundingBox().getWidth();

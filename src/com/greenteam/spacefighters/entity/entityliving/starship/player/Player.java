@@ -46,7 +46,7 @@ public class Player extends Starship {
 	//platforming code
 	private static final double DRAG_X = 0.1;
 	private static final double DRAG_Y = 0.00002;
-	private static final double ANIMATION_MOVEMENT_INCREMENT = 40;
+	private static final double ANIMATION_MOVEMENT_INCREMENT = 20;
 	private static final double BOUNDING_BOX_WIDTH = 18;
 	private static final double BOUNDING_BOX_HEIGHT = 36;
 	

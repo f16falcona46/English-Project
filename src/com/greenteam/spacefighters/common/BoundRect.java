@@ -1,7 +1,7 @@
 package com.greenteam.spacefighters.common;
 
 public class BoundRect {
-	private static final double DELTA = -1;
+	private static final double DELTA = -0.8;
 	
 	private double midX;
 	private double midY;
