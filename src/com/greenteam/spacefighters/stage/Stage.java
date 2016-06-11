@@ -35,7 +35,7 @@ import com.greenteam.spacefighters.GUI.KeyboardInputHandlerHolder;
 import com.greenteam.spacefighters.GUI.Window;
 import com.greenteam.spacefighters.common.Vec2;
 import com.greenteam.spacefighters.entity.Entity;
-import com.greenteam.spacefighters.entity.entityliving.obstacle.Wall;
+import com.greenteam.spacefighters.entity.entityliving.obstacle.Tile;
 import com.greenteam.spacefighters.entity.entityliving.starship.player.Player;
 
 public class Stage extends JPanel implements ActionListener, MouseListener {
@@ -56,6 +56,7 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 	private static final double PLAYER_HORIZONTAL_SPEED = 6000;
 	
 	public static final double GRAVITY = 9000;
+	public static final int TILE_HEIGHT = 16;
 
 	
 	private ConcurrentHashMap<Integer, CopyOnWriteArrayList<Entity>> entities;
@@ -79,6 +80,9 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 	private Window window;
 	private JButton pauseResumeButton;
 	
+	private int width;
+	private int height;
+	
 	public Stage(Window window, int width, int height, LevelLoader levelLoader) {
 		this.window = window;
 		this.entities = new ConcurrentHashMap<Integer, CopyOnWriteArrayList<Entity>>();
@@ -87,6 +91,9 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 		this.mouseEnabled = false;
 		this.backgroundOffsets = new double[STARFIELD_LAYERS];
 		this.setLayout(new GridBagLayout());
+		
+		this.width = Stage.WIDTH;
+		this.height = Stage.HEIGHT;
 		
 		this.returnToTitleGridBagConstraints = new GridBagConstraints();
 		returnToTitleGridBagConstraints.gridx = 0;
@@ -412,9 +419,9 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 		return timer;
 	}
 	
-	public static boolean inStage(Vec2 pos) {
-		return (pos.getX() > 0 && pos.getX() < Stage.WIDTH &&
-				pos.getY() > 0 && pos.getY() < Stage.HEIGHT);
+	public boolean inStage(Vec2 pos) {
+		return (pos.getX() > 0 && pos.getX() < this.getWidth() &&
+				pos.getY() > 0 && pos.getY() < this.getHeight());
 	}
 	
 	public Entity getNearestEntity(Entity entity) {
@@ -486,11 +493,19 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 	}
 	
 	public double getCanvasHeight() {
-		return Stage.HEIGHT;
+		return this.height;
 	}
 	
 	public double getCanvasWidth() {
-		return Stage.WIDTH;
+		return this.width;
+	}
+	
+	public void setCanvasHeight(int height) {
+		this.height = height;
+	}
+	
+	public void setCanvasWidth(int width) {
+		this.width = width;
 	}
 	
 	private class MoveActionPressed extends AbstractAction {

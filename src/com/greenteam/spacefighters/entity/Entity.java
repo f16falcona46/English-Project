@@ -111,24 +111,25 @@ public abstract class Entity {
 	}
 
 	protected void setTexture(Image texture) {
-		
-		GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-	    GraphicsDevice device = env.getDefaultScreenDevice();
-	    GraphicsConfiguration config = device.getDefaultConfiguration();
-	    BufferedImage image = (BufferedImage)texture;
-		
-		
-	    if (image.getColorModel().equals(config.getColorModel())) {
-	        this.texture = image;
-	    } else {
-	    	final BufferedImage new_image = config.createCompatibleImage(image.getWidth(), image.getHeight(), image.getTransparency());
-
-	    	final Graphics2D g2d = (Graphics2D) new_image.getGraphics();
-	    	g2d.drawImage(image, 0, 0, null);
-	    	g2d.dispose();
-
-	    	this.texture = new_image;
-	    }
+		if (texture != null) {
+			GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		    GraphicsDevice device = env.getDefaultScreenDevice();
+		    GraphicsConfiguration config = device.getDefaultConfiguration();
+		    BufferedImage image = (BufferedImage)texture;
+			
+			
+		    if (image.getColorModel().equals(config.getColorModel())) {
+		        this.texture = image;
+		    } else {
+		    	final BufferedImage new_image = config.createCompatibleImage(image.getWidth(), image.getHeight(), image.getTransparency());
+	
+		    	final Graphics2D g2d = (Graphics2D) new_image.getGraphics();
+		    	g2d.drawImage(image, 0, 0, null);
+		    	g2d.dispose();
+	
+		    	this.texture = new_image;
+		    }
+		}
 	}
 	
 	public BoundRect getBoundingBox() {

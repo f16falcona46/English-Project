@@ -3,16 +3,20 @@ package com.greenteam.spacefighters.stage;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.Timer;
 
 import com.greenteam.spacefighters.GUI.HUD;
 import com.greenteam.spacefighters.GUI.Window;
 import com.greenteam.spacefighters.common.Vec2;
 import com.greenteam.spacefighters.entity.Entity;
-import com.greenteam.spacefighters.entity.entityliving.obstacle.Wall;
+import com.greenteam.spacefighters.entity.entityliving.obstacle.Tile;
+import com.greenteam.spacefighters.entity.entityliving.obstacle.TileType;
 import com.greenteam.spacefighters.entity.entityliving.starship.enemy.*;
 import com.greenteam.spacefighters.entity.entityliving.starship.player.Player;
 import com.greenteam.spacefighters.entity.entityliving.starship.player.Player.PlayerShipColor;
@@ -64,6 +68,20 @@ public class LevelLoader implements ActionListener {
 		player.setAcceleration(new Vec2(0, Stage.GRAVITY));
 		stage.setPlayer(player);
 		
+		try {
+			BufferedImage map = ImageIO.read(Player.class.getResource("/com/greenteam/spacefighters/assets/gatsby/map-1.png"));
+			stage.setCanvasWidth(map.getWidth()*Stage.TILE_HEIGHT);
+			stage.setCanvasHeight(map.getHeight()*Stage.TILE_HEIGHT);
+			for (int i = 0; i < map.getHeight(); ++i) {
+				for (int j = 0; j < map.getWidth(); ++j) {
+					int color = map.getRGB(j, i);
+					TileType type = Tile.interpretColor(color);
+					
+				}
+			}
+		}
+		catch (IOException ex) {}
+		
 		stage.setHUD(new HUD(stage));
 	}
 	
@@ -74,7 +92,7 @@ public class LevelLoader implements ActionListener {
 			array.clear();
 		
 		for (int i = 0; i < stage.getCanvasWidth()/16+1; ++i) {
-			Wall wall = new Wall(stage, Integer.MAX_VALUE);
+			Tile wall = new Tile(stage);
 			wall.getBoundingBox().setHeight(16);
 			wall.getBoundingBox().setWidth(16);
 			wall.setPosition(new Vec2(16*i+8, stage.getCanvasHeight()-8));
@@ -84,7 +102,7 @@ public class LevelLoader implements ActionListener {
 		
 		for (int j = 0; j < 10; ++j) {
 			for (int i = 0; i < 10; ++i) {
-				Wall wall = new Wall(stage, Integer.MAX_VALUE);
+				Tile wall = new Tile(stage);
 				wall.getBoundingBox().setHeight(16);
 				wall.getBoundingBox().setWidth(16);
 				wall.setPosition(new Vec2(16*i+8+j*160, stage.getCanvasHeight()-8-j*80));
