@@ -110,9 +110,7 @@ public class Tile extends Obstacle {
 			entityToAdd = new Tile(stage, type, true);
 			break;
 		case PLAYER:
-			System.out.println(x+" "+y);
 			stage.getPlayer().setPosition(new Vec2(Stage.TILE_HEIGHT/2+Stage.TILE_HEIGHT*x, Stage.TILE_HEIGHT*(1+y)-2)); //the -2 is needed because of collision detection glitches
-			System.out.println(stage.getPlayer().getPosition());
 			return;
 		case AIR:
 			return;
