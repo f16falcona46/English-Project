@@ -6,18 +6,27 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import com.greenteam.spacefighters.common.Vec2;
+import com.greenteam.spacefighters.entity.Entity;
 import com.greenteam.spacefighters.entity.entityliving.starship.player.Player;
 import com.greenteam.spacefighters.stage.Stage;
 
 public class Tile extends Obstacle {
 	private TileType type;
 
-	public Tile(Stage s, int color) {
+	public Tile(Stage s, TileType type, boolean touchable) {
 		super(s, Integer.MAX_VALUE);
 		this.getBoundingBox().setX(this.getPosition().getX());
 		this.getBoundingBox().setY(this.getPosition().getY());
-		this.getBoundingBox().setWidth(Stage.TILE_HEIGHT);
-		this.getBoundingBox().setHeight(Stage.TILE_HEIGHT);
+		if (touchable) {
+			this.getBoundingBox().setWidth(Stage.TILE_HEIGHT);
+			this.getBoundingBox().setHeight(Stage.TILE_HEIGHT);
+		}
+		else {
+			this.getBoundingBox().setWidth(-1);
+			this.getBoundingBox().setHeight(-1);
+		}
+		this.type = type;
 		this.setTex();
 	}
 	
@@ -41,6 +50,8 @@ public class Tile extends Obstacle {
 		int y = (int)this.getBoundingBox().getY();
 		int w = (int)this.getBoundingBox().getWidth();
 		int h = (int)this.getBoundingBox().getHeight();
+		if (w < 0) w = Stage.TILE_HEIGHT;
+		if (h < 0) h = Stage.TILE_HEIGHT;
 		//System.out.println(x+" "+y+" "+w+" "+h);
 		if (this.getTexture() == null) {
 			g.setColor(Color.DARK_GRAY);
@@ -62,6 +73,8 @@ public class Tile extends Obstacle {
 				break;
 			case BRICK:
 				this.setTexture(ImageIO.read(Player.class.getResource("/com/greenteam/spacefighters/assets/gatsby/tile-brick.png")));
+				break;
+			default:
 				break;
 			}
 		}
@@ -87,6 +100,26 @@ public class Tile extends Obstacle {
 	}
 	
 	public static void doTile(TileType type, int x, int y, Stage stage) {
-		
+		Entity entityToAdd = null;
+		switch (type) {
+		case SOIL:
+			entityToAdd = new Tile(stage, type, false);
+			break;
+		case GRASS:
+		case BRICK:
+			entityToAdd = new Tile(stage, type, true);
+			break;
+		case PLAYER:
+			System.out.println(x+" "+y);
+			stage.getPlayer().setPosition(new Vec2(Stage.TILE_HEIGHT/2+Stage.TILE_HEIGHT*x, Stage.TILE_HEIGHT*(1+y)-2)); //the -2 is needed because of collision detection glitches
+			System.out.println(stage.getPlayer().getPosition());
+			return;
+		case AIR:
+			return;
+		case UNKNOWN:
+			return;
+		}
+		entityToAdd.setPosition(new Vec2(Stage.TILE_HEIGHT/2+Stage.TILE_HEIGHT*x, Stage.TILE_HEIGHT/2+Stage.TILE_HEIGHT*y));
+		stage.add(entityToAdd);
 	}
 }

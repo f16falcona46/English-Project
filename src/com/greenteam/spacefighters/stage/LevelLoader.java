@@ -64,23 +64,9 @@ public class LevelLoader implements ActionListener {
 		this.setDifficulty(difficulty);
 		
 		Player player = new Player(stage, 100, 100, PlayerShipColor.RED);
-		player.setPosition(new Vec2(stage.getCanvasWidth() / 2 , stage.getCanvasHeight() / 2));
+		//player.setPosition(new Vec2(stage.getCanvasWidth() / 2 , stage.getCanvasHeight() / 2));
 		player.setAcceleration(new Vec2(0, Stage.GRAVITY));
 		stage.setPlayer(player);
-		
-		try {
-			BufferedImage map = ImageIO.read(Player.class.getResource("/com/greenteam/spacefighters/assets/gatsby/map-1.png"));
-			stage.setCanvasWidth(map.getWidth()*Stage.TILE_HEIGHT);
-			stage.setCanvasHeight(map.getHeight()*Stage.TILE_HEIGHT);
-			for (int i = 0; i < map.getHeight(); ++i) {
-				for (int j = 0; j < map.getWidth(); ++j) {
-					int color = map.getRGB(j, i);
-					TileType type = Tile.interpretColor(color);
-					
-				}
-			}
-		}
-		catch (IOException ex) {}
 		
 		stage.setHUD(new HUD(stage));
 	}
@@ -91,6 +77,22 @@ public class LevelLoader implements ActionListener {
 		for (CopyOnWriteArrayList<Entity> array : stage.getEntities().values())
 			array.clear();
 		
+		try {
+			BufferedImage map = ImageIO.read(Player.class.getResource("/com/greenteam/spacefighters/assets/gatsby/map-1.png"));
+			stage.setCanvasWidth(map.getWidth()*Stage.TILE_HEIGHT);
+			stage.setCanvasHeight(map.getHeight()*Stage.TILE_HEIGHT);
+			for (int i = 0; i < map.getHeight(); ++i) {
+				for (int j = 0; j < map.getWidth(); ++j) {
+					int color = map.getRGB(j, i);
+					TileType type = Tile.interpretColor(color);
+					//System.out.println(j+" "+i+" "+type);
+					Tile.doTile(type,j,i,stage);
+				}
+			}
+		}
+		catch (IOException ex) {}
+		
+		/*
 		for (int i = 0; i < stage.getCanvasWidth()/16+1; ++i) {
 			Tile wall = new Tile(stage);
 			wall.getBoundingBox().setHeight(16);
@@ -110,9 +112,10 @@ public class LevelLoader implements ActionListener {
 				stage.add(wall);
 			}
 		}
+		*/
 		
 		stage.add(p);
-		p.reset();
+		//p.reset();
 	}
 	
 	private void nextLevel() {

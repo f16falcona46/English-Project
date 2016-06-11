@@ -52,7 +52,7 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 	private static final double ROTATION_DEAD_ZONE_SECTOR_SIZE = 0.05; //radians
 	
 	//platforming constants
-	public static final double PLAYER_JUMP_VELOCITY = 1200;
+	public static final double PLAYER_JUMP_VELOCITY = 800;
 	private static final double PLAYER_HORIZONTAL_SPEED = 6000;
 	
 	public static final double GRAVITY = 9000;
@@ -370,10 +370,6 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 		if (!entities.containsKey(entity.getDefaultLayer()))
 			entities.put(entity.getDefaultLayer(), new CopyOnWriteArrayList<Entity>());
 		entities.get(entity.getDefaultLayer()).add(entity);
-		for (CopyOnWriteArrayList<Entity> e : entities.values()) {
-			System.out.print(e.size()+" ");
-		}
-		System.out.println();
 	}
 
 	public Player getPlayer() {

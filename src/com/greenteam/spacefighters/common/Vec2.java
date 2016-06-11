@@ -60,7 +60,7 @@ public class Vec2 {
 	}
 	
 	public String toString() {
-		return x + ", " + y;
+		return "("+x + "," + y+")";
 	}
 
 	public boolean isZeroVector() {

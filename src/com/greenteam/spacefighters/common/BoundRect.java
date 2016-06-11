@@ -55,6 +55,10 @@ public class BoundRect {
 	}
 	
 	public boolean intersects(BoundRect other) {
+		if (((this.halfWidth) < 0) || ((other.halfWidth) < 0) ||
+				((this.halfHeight) < 0) || ((other.halfHeight) < 0)) {
+			return false;
+		}
 		if (Math.abs(other.midX - this.midX) < (this.halfWidth + other.halfWidth)) {
 			if (Math.abs(other.midY - this.midY) < (this.halfHeight + other.halfHeight)) return true;
 		}

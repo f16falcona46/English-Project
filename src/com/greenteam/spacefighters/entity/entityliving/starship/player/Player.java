@@ -177,7 +177,7 @@ public class Player extends Starship {
 		Vec2 nextPos = this.getPosition().add(this.getVelocity().scale(((double)ms)/1000));
 		canMove(nextPos);
 		
-		System.out.println(this.collisionState);
+		//System.out.println(this.collisionState);
 		time += ms;
 		
 		switch (collisionState) {
@@ -508,7 +508,7 @@ public class Player extends Starship {
 			for (Entity e : entities) {
 				if (e == this) continue;
 				if (rect.intersects(e.getBoundingBox())) {
-					System.out.println(rect.whichSideIntersected(e.getBoundingBox()));
+					//System.out.println(rect.whichSideIntersected(e.getBoundingBox()));
 					this.collisionState = rect.whichSideIntersected(e.getBoundingBox());
 					return false;
 				}
