@@ -21,6 +21,7 @@ public abstract class Obstacle extends EntityLiving {
 				Projectile.class.isAssignableFrom(e.getSourceClass()));
 	}
 	
+	/*
 	@Override
 	public void update(int ms) {
 		super.update(ms);
@@ -35,7 +36,7 @@ public abstract class Obstacle extends EntityLiving {
 			}
 		}
 	}
-	
+	*/
 	@Override
 	public int getDefaultLayer() {
 		return -1;
