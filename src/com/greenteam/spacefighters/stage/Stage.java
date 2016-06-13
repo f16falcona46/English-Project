@@ -742,4 +742,8 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 	public void setMouseEnabled(boolean mouseEnabled) {
 		this.mouseEnabled = mouseEnabled;
 	}
+	
+	public void playerDied() {
+		JOptionPane.showMessageDialog(this, "You died!", "Game Over", JOptionPane.INFORMATION_MESSAGE);
+	}
 }

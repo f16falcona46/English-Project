@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 
 import com.greenteam.spacefighters.common.Vec2;
 import com.greenteam.spacefighters.entity.Entity;
+import com.greenteam.spacefighters.entity.entityliving.starship.enemy.Enemy;
 import com.greenteam.spacefighters.entity.entityliving.starship.player.Player;
 import com.greenteam.spacefighters.stage.Stage;
 
@@ -16,9 +17,11 @@ public class Tile extends Obstacle {
 	private static BufferedImage GRASS = null;
 	private static BufferedImage SOIL = null;
 	private static BufferedImage BRICK = null;
+	private static BufferedImage SPIKES = null;
 	private static boolean allTexturesLoaded = false;
 	
 	private TileType type;
+	private Class<?> source;
 
 	public Tile(Stage s, TileType type, boolean touchable) {
 		super(s, Integer.MAX_VALUE);
@@ -88,6 +91,7 @@ public class Tile extends Obstacle {
 				GRASS = ImageIO.read(Player.class.getResource("/com/greenteam/spacefighters/assets/gatsby/tile-grass.png"));
 				SOIL = ImageIO.read(Player.class.getResource("/com/greenteam/spacefighters/assets/gatsby/tile-soil.png"));
 				BRICK = ImageIO.read(Player.class.getResource("/com/greenteam/spacefighters/assets/gatsby/tile-brick.png"));
+				SPIKES = ImageIO.read(Player.class.getResource("/com/greenteam/spacefighters/assets/gatsby/tile-spikes.png"));
 				allTexturesLoaded = true;
 			}
 		}
@@ -103,6 +107,9 @@ public class Tile extends Obstacle {
 			break;
 		case BRICK:
 			this.setTexture(BRICK);
+			break;
+		case SPIKES:
+			this.setTexture(SPIKES);
 			break;
 		default:
 			break;
@@ -120,6 +127,8 @@ public class Tile extends Obstacle {
 			return TileType.GRASS;
 		case (-32985)&0xffffff: //brick (dark orange)
 			return TileType.BRICK;
+		case 15539236: //spikes (red)
+			return TileType.SPIKES;
 		case 0xffffff:
 			return TileType.AIR;
 		default:
@@ -132,10 +141,16 @@ public class Tile extends Obstacle {
 		switch (type) {
 		case SOIL:
 			entityToAdd = new Tile(stage, type, false);
+			((Tile)entityToAdd).setSourceClass(Obstacle.class);
 			break;
 		case GRASS:
 		case BRICK:
 			entityToAdd = new Tile(stage, type, true);
+			((Tile)entityToAdd).setSourceClass(Obstacle.class);
+			break;
+		case SPIKES:
+			entityToAdd = new Tile(stage, type, true);
+			((Tile)entityToAdd).setSourceClass(Enemy.class);
 			break;
 		case PLAYER:
 			stage.getPlayer().setPosition(new Vec2(Stage.TILE_HEIGHT/2+Stage.TILE_HEIGHT*x, Stage.TILE_HEIGHT*(1+y)-2)); //the -2 is needed because of collision detection glitches
@@ -147,5 +162,14 @@ public class Tile extends Obstacle {
 		}
 		entityToAdd.setPosition(new Vec2(Stage.TILE_HEIGHT/2+Stage.TILE_HEIGHT*x, Stage.TILE_HEIGHT/2+Stage.TILE_HEIGHT*y));
 		stage.add(entityToAdd);
+	}
+	
+	@Override
+	public Class<?> getSourceClass() {
+		return source;
+	}
+	
+	public void setSourceClass(Class<?> source) {
+		this.source = source;
 	}
 }

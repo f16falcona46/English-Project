@@ -86,6 +86,7 @@ public class LevelLoader implements ActionListener {
 					int color = map.getRGB(j, i);
 					TileType type = Tile.interpretColor(color);
 					//System.out.println(j+" "+i+" "+type);
+					if (type == TileType.UNKNOWN) System.out.println(color&0xffffff);
 					Tile.doTile(type,j,i,stage);
 				}
 			}

@@ -508,7 +508,9 @@ public class Player extends Starship {
 			for (Entity e : entities) {
 				if (e == this) continue;
 				if (rect.intersects(e.getBoundingBox())) {
-					//System.out.println(rect.whichSideIntersected(e.getBoundingBox()));
+					if (Enemy.class.isAssignableFrom(e.getSourceClass())) {
+						this.getStage().playerDied();
+					}
 					this.collisionState = rect.whichSideIntersected(e.getBoundingBox());
 					return false;
 				}
