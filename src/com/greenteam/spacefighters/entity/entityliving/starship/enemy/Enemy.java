@@ -72,7 +72,6 @@ public abstract class Enemy extends Starship {
 		if (lastAttacker != null && lastAttacker instanceof Player) {
 			Player pl = ((Player)lastAttacker);
 			pl.setScore(stage.getPlayer().getScore() + this.getPointValue());
-			pl.setMoney(stage.getPlayer().getMoney() + this.getPointValue()/10);
 		}
 		Explosion e = new Explosion(this.getStage(), this.getPosition(), 100);
 		this.getStage().add(e);
