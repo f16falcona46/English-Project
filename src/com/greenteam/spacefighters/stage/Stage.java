@@ -53,7 +53,7 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 	
 	//platforming constants
 	public static final double PLAYER_JUMP_VELOCITY = 800;
-	private static final double PLAYER_HORIZONTAL_SPEED = 6000;
+	private static final double PLAYER_HORIZONTAL_SPEED = 8000;
 	
 	public static final double GRAVITY = 9000;
 	public static final int TILE_HEIGHT = 16;
@@ -181,7 +181,7 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
-		g.setColor(java.awt.Color.WHITE);
+		g.setColor(new java.awt.Color(210, 210, 255));
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		
 		Vec2 offsetMax = new Vec2(WIDTH - this.getWidth(), HEIGHT - this.getHeight());

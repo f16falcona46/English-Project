@@ -2,6 +2,7 @@ package com.greenteam.spacefighters.entity.entityliving.obstacle;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -12,6 +13,11 @@ import com.greenteam.spacefighters.entity.entityliving.starship.player.Player;
 import com.greenteam.spacefighters.stage.Stage;
 
 public class Tile extends Obstacle {
+	private static BufferedImage GRASS = null;
+	private static BufferedImage SOIL = null;
+	private static BufferedImage BRICK = null;
+	private static boolean allTexturesLoaded = false;
+	
 	private TileType type;
 
 	public Tile(Stage s, TileType type, boolean touchable) {
@@ -50,8 +56,22 @@ public class Tile extends Obstacle {
 		int y = (int)this.getBoundingBox().getY();
 		int w = (int)this.getBoundingBox().getWidth();
 		int h = (int)this.getBoundingBox().getHeight();
-		if (w < 0) w = Stage.TILE_HEIGHT;
-		if (h < 0) h = Stage.TILE_HEIGHT;
+		if (w < 0) {
+			if (this.getTexture() != null) {
+				w = this.getTexture().getWidth(null);
+			}
+			else {
+				w = Stage.TILE_HEIGHT;
+			}
+		}
+		if (h < 0) {
+			if (this.getTexture() != null) {
+				h = this.getTexture().getHeight(null);
+			}
+			else {
+				h = Stage.TILE_HEIGHT;
+			}
+		}
 		//System.out.println(x+" "+y+" "+w+" "+h);
 		if (this.getTexture() == null) {
 			g.setColor(Color.DARK_GRAY);
@@ -64,21 +84,29 @@ public class Tile extends Obstacle {
 	
 	private void setTex() {
 		try {
-			switch (type) {
-			case GRASS:
-				this.setTexture(ImageIO.read(Player.class.getResource("/com/greenteam/spacefighters/assets/gatsby/tile-grass.png")));
-				break;
-			case SOIL:
-				this.setTexture(ImageIO.read(Player.class.getResource("/com/greenteam/spacefighters/assets/gatsby/tile-soil.png")));
-				break;
-			case BRICK:
-				this.setTexture(ImageIO.read(Player.class.getResource("/com/greenteam/spacefighters/assets/gatsby/tile-brick.png")));
-				break;
-			default:
-				break;
+			if (!allTexturesLoaded) {
+				GRASS = ImageIO.read(Player.class.getResource("/com/greenteam/spacefighters/assets/gatsby/tile-grass.png"));
+				SOIL = ImageIO.read(Player.class.getResource("/com/greenteam/spacefighters/assets/gatsby/tile-soil.png"));
+				BRICK = ImageIO.read(Player.class.getResource("/com/greenteam/spacefighters/assets/gatsby/tile-brick.png"));
+				allTexturesLoaded = true;
 			}
 		}
-		catch (IOException ex) { }
+		catch (IOException ex) {
+			allTexturesLoaded = false;
+		}
+		switch (type) {
+		case GRASS:
+			this.setTexture(GRASS);
+			break;
+		case SOIL:
+			this.setTexture(SOIL);
+			break;
+		case BRICK:
+			this.setTexture(BRICK);
+			break;
+		default:
+			break;
+		}
 	}
 	
 	public static TileType interpretColor(int color) {

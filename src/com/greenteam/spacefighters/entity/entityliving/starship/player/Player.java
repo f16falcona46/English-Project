@@ -44,7 +44,7 @@ public class Player extends Starship {
 	private static final int DEFAULT_LIVES = 3;
 	
 	//platforming code
-	private static final double DRAG_X = 0.1;
+	private static final double DRAG_X = 0.2;
 	private static final double DRAG_Y = 0.00002;
 	private static final double ANIMATION_MOVEMENT_INCREMENT = 20;
 	private static final double BOUNDING_BOX_WIDTH = 18;
