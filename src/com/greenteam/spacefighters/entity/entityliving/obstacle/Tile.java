@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 import com.greenteam.spacefighters.common.Vec2;
 import com.greenteam.spacefighters.entity.Entity;
 import com.greenteam.spacefighters.entity.entityliving.starship.enemy.Enemy;
+import com.greenteam.spacefighters.entity.entityliving.starship.enemy.TestEnemy;
 import com.greenteam.spacefighters.entity.entityliving.starship.player.Player;
 import com.greenteam.spacefighters.stage.Stage;
 
@@ -121,6 +122,8 @@ public class Tile extends Obstacle {
 		switch (color) {
 		case (-3947581)&0xffffff: //player (light grey)
 			return TileType.PLAYER;
+		case 4147404: //red enemy (deep blue)
+			return TileType.REDENEMY;
 		case (-4621737)&0xffffff: //soil (light brown)
 			return TileType.SOIL;
 		case (-7864299)&0xffffff: //grass (dark brown)
@@ -154,6 +157,12 @@ public class Tile extends Obstacle {
 			break;
 		case PLAYER:
 			stage.getPlayer().setPosition(new Vec2(Stage.TILE_HEIGHT/2+Stage.TILE_HEIGHT*x, Stage.TILE_HEIGHT*(1+y)-2)); //the -2 is needed because of collision detection glitches
+			return;
+		case REDENEMY:
+			entityToAdd = new TestEnemy(stage);
+			entityToAdd.setAcceleration(new Vec2(Stage.PLAYER_HORIZONTAL_SPEED/3, 0));
+			entityToAdd.setPosition(new Vec2(Stage.TILE_HEIGHT+Stage.TILE_HEIGHT*x, Stage.TILE_HEIGHT*(1+y)-7));
+			stage.add(entityToAdd);
 			return;
 		case AIR:
 			return;

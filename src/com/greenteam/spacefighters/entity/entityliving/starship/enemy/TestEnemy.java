@@ -30,6 +30,7 @@ import com.greenteam.spacefighters.entity.entityliving.projectile.LinearProjecti
 import com.greenteam.spacefighters.entity.entityliving.projectile.Projectile;
 import com.greenteam.spacefighters.entity.entityliving.starship.Starship;
 import com.greenteam.spacefighters.entity.entityliving.starship.enemy.Enemy;
+import com.greenteam.spacefighters.entity.entityliving.starship.player.Player;
 import com.greenteam.spacefighters.stage.Stage;
 
 public class TestEnemy extends Enemy {
@@ -155,6 +156,7 @@ public class TestEnemy extends Enemy {
 		case LEFT:
 		case RIGHT:
 			this.getVelocity().setX(0);
+			this.getAcceleration().setX(-this.getAcceleration().getX());
 			break;
 		case TOP:
 		case BOTTOM:
@@ -299,7 +301,7 @@ public class TestEnemy extends Enemy {
 			for (Entity e : entities) {
 				if (e == this) continue;
 				if (rect.intersects(e.getBoundingBox())) {
-					if (Enemy.class.isAssignableFrom(e.getSourceClass())) {
+					if (Player.class.isAssignableFrom(e.getSourceClass())) {
 						this.getStage().playerDied();
 					}
 					this.collisionState = rect.whichSideIntersected(e.getBoundingBox());

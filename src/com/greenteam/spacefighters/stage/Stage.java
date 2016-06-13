@@ -53,7 +53,7 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 	
 	//platforming constants
 	public static final double PLAYER_JUMP_VELOCITY = 800;
-	private static final double PLAYER_HORIZONTAL_SPEED = 8000;
+	public static final double PLAYER_HORIZONTAL_SPEED = 8000;
 	
 	public static final double GRAVITY = 9000;
 	public static final int TILE_HEIGHT = 16;
@@ -744,6 +744,7 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 	}
 	
 	public void playerDied() {
-		JOptionPane.showMessageDialog(this, "You died!", "Game Over", JOptionPane.INFORMATION_MESSAGE);
+		//JOptionPane.showMessageDialog(this, "You died!", "Game Over", JOptionPane.INFORMATION_MESSAGE);
+		this.getPlayer().uponDeath();
 	}
 }
