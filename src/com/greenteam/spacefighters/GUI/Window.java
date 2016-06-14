@@ -5,7 +5,9 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -85,8 +87,13 @@ public class Window extends JFrame implements WindowListener {
 		
 		this.setBounds(new Rectangle(Window.WIDTH, Window.HEIGHT));
 
-		this.setTitle("SpaceFighters");
-		this.setIconImage(Player.getTexFromEnum(PlayerShipColor.RED));
+		this.setTitle("The Great Gatsby");
+		//this.setIconImage(Player.getTexFromEnum(PlayerShipColor.RED));
+		try {
+			this.setIconImage(ImageIO.read(this.getClass().getResource("/com/greenteam/spacefighters/assets/gatsby/jay-gatsby-logo.png")));
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
 		this.setMinimumSize(new Dimension(Window.WIDTH, Window.HEIGHT));
 		this.setLocationRelativeTo(null);
 		this.setContentPane(contentPane);

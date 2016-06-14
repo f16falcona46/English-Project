@@ -56,6 +56,7 @@ public class GameOverScreen extends JPanel implements ActionListener, ComponentL
 		JTextArea credits = new JTextArea("Background Music (Carraway): Big Beat Mario by Triple_sSs\n"+
 				"Background Music (Gatsby): Thwomp Volcano from Mario and Luigi: Partners in Time\n"+
 				"Sounds: Jump from Super Mario World, Death from Super Mario All-Stars\n"+
+				"Images: Great Gatsby logo from fanart.tv, Jay Gatsby logo from Edgar Díaz\n"+
 				"Sprites: Sushanth Neerumalla\n"+
 				"Tiles/Maps, GUI, Sound, Controls: Jason Li\n"+
 				"Rendering: Daniel Kelly, Jason Li"

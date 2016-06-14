@@ -45,7 +45,7 @@ public class TitleScreen extends JPanel implements ActionListener {
 		gbc.gridwidth = 2;
 		ImageIcon titleIcon = null;
 		try {
-			Image img = ImageIO.read(TitleScreen.class.getResource("/com/greenteam/spacefighters/assets/title-0.png"));
+			Image img = ImageIO.read(TitleScreen.class.getResource("/com/greenteam/spacefighters/assets/gatsby/the-great-gatsby-logo.png"));
 			titleIcon = new ImageIcon(img.getScaledInstance(4 * img.getWidth(null) / 5, 4 * img.getHeight(null) / 5, Image.SCALE_SMOOTH));
 		} catch (IOException e) {}
 		if (titleIcon != null) {
@@ -66,10 +66,7 @@ public class TitleScreen extends JPanel implements ActionListener {
 		gbc.anchor = GridBagConstraints.CENTER;
 		gbc.insets = new Insets(10, 60, 10, 10);
 		gbc.fill = GridBagConstraints.HORIZONTAL;
-		if (!window.useMouseInput())
-			basicInstructions = new JTextArea("Use arrow keys to move, and use Z, X, C, V, and F to fire. Use Space to pause.");
-		else
-			basicInstructions = new JTextArea("Move mouse to move, use mouse buttons to fire, use Space to pause.");
+		basicInstructions = new JTextArea("Left and Right to move, and Z to jump.");
 		basicInstructions.setLineWrap(true);
 		basicInstructions.setWrapStyleWord(true);
 		basicInstructions.setEditable(false);
@@ -82,7 +79,7 @@ public class TitleScreen extends JPanel implements ActionListener {
 		gbc.gridy = 2;
 		gbc.weightx = 1;
 		gbc.weighty = 1;
-		startNick = new JButton("Play as Nick");
+		startNick = new JButton("Play as Carraway");
 		startNick.addActionListener(this);
 		this.add(startNick, gbc);
 		
