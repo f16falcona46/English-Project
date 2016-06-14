@@ -22,6 +22,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -424,30 +426,12 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 			public void run() {
 				try {
 					while (!musicThread.isInterrupted()) {
-						FileInputStream fis = new FileInputStream(new File(LevelLoader.class.getResource("/com/greenteam/spacefighters/assets/gatsby/bgm-"+Integer.toString((Stage.this.getLevelLoader().getLevel()+2))+".mp3").toURI()));
-						AdvancedPlayer player = new AdvancedPlayer(fis);
-						/*
-						player.setPlayBackListener(new PlaybackListener() {
-							@Override
-							public void playbackFinished(PlaybackEvent ev) {
-								try {
-									player.play(0, Integer.MAX_VALUE);
-								} catch (JavaLayerException ex) {
-									ex.printStackTrace();
-								}
-							}
-						});
-						*/
+						InputStream is = this.getClass().getResourceAsStream("/com/greenteam/spacefighters/assets/gatsby/bgm-"+Integer.toString((Stage.this.getLevelLoader().getLevel()+2))+".mp3");
+						AdvancedPlayer player = new AdvancedPlayer(is);
 						player.play(0, Integer.MAX_VALUE);
 					}
 				}
 				catch (JavaLayerException ex) {
-					ex.printStackTrace();
-				}
-				catch (FileNotFoundException ex) {
-					ex.printStackTrace();
-				}
-				catch (URISyntaxException ex) {
 					ex.printStackTrace();
 				}
 			}

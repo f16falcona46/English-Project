@@ -53,11 +53,12 @@ public class GameOverScreen extends JPanel implements ActionListener, ComponentL
 		score.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 36));
 		this.add(score, gbc);
 		
-		JTextArea credits = new JTextArea("Background Music: Big Beat Mario by Triple_sSs\n"+
+		JTextArea credits = new JTextArea("Background Music (Carraway): Big Beat Mario by Triple_sSs\n"+
+				"Background Music (Gatsby): Thwomp Volcano from Mario and Luigi: Partners in Time\n"+
 				"Sounds: Jump from Super Mario World, Death from Super Mario All-Stars\n"+
 				"Sprites: Sushanth Neerumalla\n"+
-				"Tiles, GUI, AI, Controls: Jason Li\n"+
-				"Rendering: Daniel Kelly"
+				"Tiles/Maps, GUI, Sound, Controls: Jason Li\n"+
+				"Rendering: Daniel Kelly, Jason Li"
 			);
 		credits.setOpaque(false);
 		credits.setForeground(Color.LIGHT_GRAY);
