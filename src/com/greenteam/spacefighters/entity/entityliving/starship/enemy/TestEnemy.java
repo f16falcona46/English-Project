@@ -243,29 +243,6 @@ public class TestEnemy extends Enemy {
 			this.dir = Direction.LEFT;
 		}
 		
-		if (jumpButtonPressed && ((movementState == MovementState.JUMPUP) || (movementState == MovementState.JUMPFALL))) {
-			this.getAcceleration().setY(Stage.GRAVITY/3);
-		}
-		else {
-			this.getAcceleration().setY(Stage.GRAVITY);
-		}
-		
-		if (jumpButtonPressed && (collisionState == RectCollisionSide.BOTTOM)) {
-			this.getVelocity().setY(this.getVelocity().getY()-Stage.PLAYER_JUMP_VELOCITY);
-		}
-		
-	    for (CopyOnWriteArrayList<Entity> array : this.getStage().getEntities().values()) {
-	    	for (Entity e : array) {
-	    		if (e == this) continue;
-	    		if (this.overlaps(e) &&
-	    			(Obstacle.class.isAssignableFrom(e.getSourceClass()) ||
-	    			 Enemy.class.isAssignableFrom(e.getSourceClass())) &&
-	    			e instanceof EntityLiving && !((EntityLiving)e).isDead()) {
-	    			((EntityLiving)e).damage(this, this.getDamage());
-				}
-			}
-		}
-		
 		double speedY = getVelocity().getY();
 		double dragY = speedY * speedY * DRAG_Y * Math.signum(speedY);
 		this.getVelocity().setY(this.getVelocity().getY() - dragY);
@@ -324,7 +301,7 @@ public class TestEnemy extends Enemy {
 				if (e == this) continue;
 				if (rect.intersects(e.getBoundingBox())) {
 					if (Player.class.isAssignableFrom(e.getSourceClass())) {
-						this.getStage().playerDied();
+						//this.getStage().playerDied();
 					}
 					if ((this.collisionState != RectCollisionSide.LEFT) && (this.collisionState != RectCollisionSide.RIGHT)) {
 						this.collisionState = rect.whichSideIntersected(e.getBoundingBox());

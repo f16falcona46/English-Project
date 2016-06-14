@@ -83,7 +83,8 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 	private Timer fireSecondaryTimer;
 	private Timer fireTertiaryTimer;
 	private Timer fireQuaternaryTimer;
-	private Image[] starfields;
+	private double[] starfieldsX;
+	private double[] starfieldsY;
 	private double[] backgroundOffsets;
 	private boolean upKeyPressed;
 	private boolean downKeyPressed;
@@ -156,10 +157,12 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 		KeyboardInputHandlerHolder.handler.addReleasedAction("F", new FireKeyReleased(FireKey.F));
 		KeyboardInputHandlerHolder.handler.addReleasedAction("V", new FireKeyReleased(FireKey.CHAINBEAM));
 		
-		this.starfields = new BufferedImage[STARFIELD_LAYERS];
-		GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-	    GraphicsDevice device = env.getDefaultScreenDevice();
-	    GraphicsConfiguration config = device.getDefaultConfiguration();
+		this.starfieldsX = new double[NUM_STARS];
+		this.starfieldsY = new double[NUM_STARS];
+		for (int i = 0; i < NUM_STARS; ++i) {
+			starfieldsX[i] = Math.random();
+			starfieldsY[i] = Math.random();
+		}
 		this.addMouseListener(this);
 		this.setPreferredSize(new Dimension(width, height));
 		this.setSize(new Dimension(width, height));
@@ -190,8 +193,8 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
 		//g.setColor(new java.awt.Color(210, 210, 255));
-		g.setColor(new java.awt.Color(10, 20, 30));
-		g.fillRect(0, 0, this.getWidth(), this.getHeight());
+		g2.setColor(new java.awt.Color(30, 40, 50));
+		g2.fillRect(0, 0, this.getWidth(), this.getHeight());
 		
 		Vec2 offsetMax = new Vec2(this.getCanvasWidth() - this.getWidth(), this.getCanvasHeight() - this.getHeight());
 		Vec2 offsetMin = Vec2.ZERO;
@@ -202,14 +205,12 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 		offset = offset.min(offsetMax).max(offsetMin);
 		g.translate(-(int)offset.getX(), -(int)offset.getY());
 		g.setClip((int)(offset.getX()), (int)(offset.getY()), (int)(offset.getX() + this.getWidth()), (int)(offset.getY() + this.getHeight()));
-		/*
-		for (int i = 0; i < STARFIELD_LAYERS; ++i) {
-			if (starfields[i] != null) {
-				g.drawImage(starfields[i], 0, 0, null);
-				g.drawImage(starfields[i], 0, 0, null);
-			}
+		
+		g.setColor(java.awt.Color.LIGHT_GRAY);
+		for (int i = 0; i < NUM_STARS; ++i) {
+			g.fillRect((int)(this.getCanvasWidth()*starfieldsX[i]), (int)(this.getCanvasHeight()*starfieldsY[i]), 2, 2);
 		}
-		*/
+		
 		for (Entry<Integer, CopyOnWriteArrayList<Entity>> entry : entities.entrySet()) {
 			for (Entity e : entry.getValue()) {
 				if (e != player) {

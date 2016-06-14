@@ -189,7 +189,9 @@ public class Tile extends Obstacle {
 			return;
 		case GOALGATSBY:
 			entityToAdd = new Gatsby(stage);
-			break;
+			entityToAdd.setPosition(new Vec2(Stage.TILE_HEIGHT+Stage.TILE_HEIGHT*x, Stage.TILE_HEIGHT*(1+y)-12));
+			stage.add(entityToAdd);
+			return;
 		case GOALITEMSTART:
 			entityToAdd = new GoalItem(stage);
 			((GoalItem)entityToAdd).addDest(new Vec2(Stage.TILE_HEIGHT/2+Stage.TILE_HEIGHT*x, Stage.TILE_HEIGHT/2+Stage.TILE_HEIGHT*y));

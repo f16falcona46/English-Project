@@ -104,6 +104,6 @@ public class GameOverScreen extends JPanel implements ActionListener, ComponentL
 
 	@Override
 	public void componentShown(ComponentEvent arg0) {
-		message.setText("Score: "+Integer.toString(stage.getPlayer().getScore()));
+		//message.setText("Score: "+Integer.toString(stage.getPlayer().getScore()));
 	}
 }
