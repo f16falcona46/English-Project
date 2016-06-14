@@ -56,6 +56,9 @@ public class GameOverScreen extends JPanel implements ActionListener, ComponentL
 		score.setForeground(Color.LIGHT_GRAY);
 		score.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 36));
 		this.add(score, gbc);
+		
+		//JTextArea credits = new JTextArea("Background Music: Big Beat Mario by ")
+		
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 2;

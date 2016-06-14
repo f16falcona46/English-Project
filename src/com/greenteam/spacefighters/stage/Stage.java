@@ -156,14 +156,6 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 		GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
 	    GraphicsDevice device = env.getDefaultScreenDevice();
 	    GraphicsConfiguration config = device.getDefaultConfiguration();
-		for (int i = 0; i < STARFIELD_LAYERS; ++i) {
-			starfields[i] = config.createCompatibleImage(WIDTH, HEIGHT);
-			Graphics g = starfields[i].getGraphics();
-			g.setColor(java.awt.Color.WHITE);
-			for (int j = 0; j < Stage.NUM_STARS; ++j) {
-				g.fillRect((int)(WIDTH * Math.random()), (int)(HEIGHT * Math.random()), 1, 1);
-			}
-		}
 		this.addMouseListener(this);
 		this.setPreferredSize(new Dimension(width, height));
 		this.setSize(new Dimension(width, height));
@@ -193,7 +185,8 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
-		g.setColor(new java.awt.Color(210, 210, 255));
+		//g.setColor(new java.awt.Color(210, 210, 255));
+		g.setColor(new java.awt.Color(10, 20, 30));
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		
 		Vec2 offsetMax = new Vec2(this.getCanvasWidth() - this.getWidth(), this.getCanvasHeight() - this.getHeight());
@@ -400,8 +393,8 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 	public void gameOver() {
 		/*
 		hud.setGameOver(true);
-		this.pause();
 		*/
+		this.pause();
 		((CardLayout)this.getParent().getLayout()).show(this.getParent(), Window.GAMEOVERSCREEN);
 	}
 	
@@ -428,9 +421,8 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 			@Override
 			public void run() {
 				try {
-					FileInputStream fis = new FileInputStream(LevelLoader.class.getResource("/com/greenteam/spacefighters/assets/gatsby/bgm-"+Integer.toString((Stage.this.getLevelLoader().getLevel()+1))+".mp3").getPath());
 					while (!musicThread.isInterrupted()) {
-						fis.reset();
+						FileInputStream fis = new FileInputStream(LevelLoader.class.getResource("/com/greenteam/spacefighters/assets/gatsby/bgm-"+Integer.toString((Stage.this.getLevelLoader().getLevel()+1))+".mp3").getPath());
 						AdvancedPlayer player = new AdvancedPlayer(fis);
 						/*
 						player.setPlayBackListener(new PlaybackListener() {
