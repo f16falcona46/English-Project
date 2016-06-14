@@ -28,8 +28,8 @@ public class DeathScreen extends JPanel implements ActionListener, ComponentList
 	private JLabel title;
 	private JTextArea deathDescription;
 	private JButton returnToGame;
-	private double[] xpositions;
-	private double[] ypositions;
+	//private double[] xpositions;
+	//private double[] ypositions;
 	
 	public DeathScreen(Stage stage) {
 		this.stage = stage;
@@ -43,7 +43,7 @@ public class DeathScreen extends JPanel implements ActionListener, ComponentList
 		gbc.gridy = 0;
 		gbc.weighty = 0;
 		gbc.insets = new Insets(20, 20, 20, 20);
-		title = new JLabel("Your ship is scrap.");
+		title = new JLabel("You died.");
 		title.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 36));
 		title.setForeground(Color.LIGHT_GRAY);
 		this.add(title, gbc);
@@ -73,12 +73,14 @@ public class DeathScreen extends JPanel implements ActionListener, ComponentList
 		returnToGame.addActionListener(this);
 		this.add(returnToGame, gbc);
 		
+		/*
 		xpositions = new double[DeathScreen.NUM_STARS];
 		ypositions = new double[DeathScreen.NUM_STARS];
 		for (int i = 0; i < DeathScreen.NUM_STARS; ++i) {
 			xpositions[i] = Math.random();
 			ypositions[i] = Math.random();
 		}
+		*/
 	}
 
 	@Override
@@ -111,11 +113,15 @@ public class DeathScreen extends JPanel implements ActionListener, ComponentList
 	}
 	
 	private void updateText() {
+		/*
 		deathDescription.setText("Your ship was destroyed. Fortunately, it could be reconstructed, but unfortunately, it can only be done "+
 			stage.getPlayer().getLives()+
 			((stage.getPlayer().getLives()==1)?" more time.":" more times."));
+		*/
+		deathDescription.setText("Lives: "+stage.getPlayer().getLives());
 	}
 	
+	/*
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -124,4 +130,5 @@ public class DeathScreen extends JPanel implements ActionListener, ComponentList
 			g.fillRect((int)(xpositions[i]*this.getWidth()), (int)(ypositions[i]*this.getHeight()), 1, 1);
 		}
 	}
+	*/
 }

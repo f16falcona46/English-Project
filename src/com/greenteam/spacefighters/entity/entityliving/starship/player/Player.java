@@ -61,7 +61,7 @@ public class Player extends Starship {
 	private static final double BOUNDING_BOX_WIDTH = 18;
 	private static final double BOUNDING_BOX_HEIGHT = 36;
 	private static final String[] SOUNDS = {
-			"death.wav", "jump.wav"
+			"death.mp3", "jump.mp3"
 	};
 
 	private int timetofiremissile;
@@ -99,7 +99,7 @@ public class Player extends Starship {
 		for (String sound : SOUNDS) {
 			try {
 				// Open an audio input stream.
-				//URL url = this.getClass().getClassLoader().getResource("/com/greenteam/spacefighters/assets/gatsby/sound-"+sound+".wav");
+				//URL url = this.getClass().getClassLoader().getResource("/com/greenteam/spacefighters/assets/gatsby/sound-"+sound+".mp3");
 				AudioInputStream ais = Player.createReusableAudioInputStream(Player.class.getResource("/com/greenteam/spacefighters/assets/gatsby/sound-"+sound));
 				sounds.put(sound, ais);
 			}
@@ -307,7 +307,7 @@ public class Player extends Starship {
 
 		if (jumpButtonPressed && (collisionState == RectCollisionSide.BOTTOM)) {
 			this.getVelocity().setY(this.getVelocity().getY()-Stage.PLAYER_JUMP_VELOCITY);
-			playSound("jump.wav");
+			playSound("jump.mp3");
 		}
 
 		if (time > HEALTH_REGEN_TIME) {
@@ -429,7 +429,7 @@ public class Player extends Starship {
 
 	@Override
 	public void uponDeath() {
-		playSound("death.wav");
+		playSound("death.mp3");
 		Stage stage = this.getStage();
 		Explosion e = new Explosion(this.getStage(), this.getPosition(), 100);
 		stage.add(e);
@@ -592,6 +592,7 @@ public class Player extends Starship {
 		AudioInputStream ais = null;
 		try
 		{
+			//ais = new WAVAudioFileReader().getAudioInputStream(file);
 			ais = AudioSystem.getAudioInputStream(file);
 			byte[] buffer = new byte[1024 * 32];
 			int read = 0;
