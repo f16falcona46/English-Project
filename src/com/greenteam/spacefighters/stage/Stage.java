@@ -20,6 +20,7 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -428,23 +429,31 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 			public void run() {
 				try {
 					FileInputStream fis = new FileInputStream(LevelLoader.class.getResource("/com/greenteam/spacefighters/assets/gatsby/bgm-"+Integer.toString((Stage.this.getLevelLoader().getLevel()+1))+".mp3").getPath());
-					AdvancedPlayer player = new AdvancedPlayer(fis);
-					player.setPlayBackListener(new PlaybackListener() {
-						@Override
-						public void playbackFinished(PlaybackEvent ev) {
-							try {
-								player.play(0, Integer.MAX_VALUE);
-							} catch (JavaLayerException ex) {
-								ex.printStackTrace();
+					while (!musicThread.isInterrupted()) {
+						fis.reset();
+						AdvancedPlayer player = new AdvancedPlayer(fis);
+						/*
+						player.setPlayBackListener(new PlaybackListener() {
+							@Override
+							public void playbackFinished(PlaybackEvent ev) {
+								try {
+									player.play(0, Integer.MAX_VALUE);
+								} catch (JavaLayerException ex) {
+									ex.printStackTrace();
+								}
 							}
-						}
-					});
-					player.play(0, Integer.MAX_VALUE);
+						});
+						*/
+						player.play(0, Integer.MAX_VALUE);
+					}
 				}
 				catch (JavaLayerException ex) {
 					ex.printStackTrace();
 				}
 				catch (FileNotFoundException ex) {
+					ex.printStackTrace();
+				}
+				catch (IOException ex) {
 					ex.printStackTrace();
 				}
 			}
