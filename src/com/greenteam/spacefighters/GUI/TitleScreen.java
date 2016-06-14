@@ -21,13 +21,11 @@ import javax.swing.JTextArea;
 
 public class TitleScreen extends JPanel implements ActionListener {
 	private static final long serialVersionUID = -8833873967148164038L;
-
-	private static final int NUM_STARS = 120;
 	
 	private JLabel title;
 	private JButton startButtonKeyboardInput;
-	private JButton settingsButton;
-	private JButton tutorialButton;
+	//private JButton settingsButton;
+	//private JButton tutorialButton;
 	private JTextArea basicInstructions;
 	private Window window;
 	
@@ -86,24 +84,6 @@ public class TitleScreen extends JPanel implements ActionListener {
 		startButtonKeyboardInput = new JButton("Start");
 		startButtonKeyboardInput.addActionListener(this);
 		this.add(startButtonKeyboardInput, gbc);
-		
-		gbc = new GridBagConstraints();
-		gbc.gridx = 0;
-		gbc.gridy = 3;
-		gbc.weightx = 1;
-		gbc.weighty = 1;
-		settingsButton = new JButton("Settings");
-		settingsButton.addActionListener(this);
-		this.add(settingsButton, gbc);
-		
-		gbc = new GridBagConstraints();
-		gbc.gridx = 1;
-		gbc.gridy = 3;
-		gbc.weightx = 1;
-		gbc.weighty = 1;
-		tutorialButton = new JButton("Tutorial");
-		tutorialButton.addActionListener(this);
-		this.add(tutorialButton, gbc);
 	}
 
 	@Override
@@ -111,19 +91,13 @@ public class TitleScreen extends JPanel implements ActionListener {
 		if (ev.getSource() == startButtonKeyboardInput) {
 			window.setCard(Window.STAGE);
 		}
-		else if (ev.getSource() == tutorialButton) {
-			window.setCard(Window.MOVEMENT_TUTORIAL);
-		}
-		else if (ev.getSource() == settingsButton) {
-			window.setCard(Window.SETTINGSSCREEN);
-		}
 	}
 	
 	public void updateInstructions() {
-		if (!window.useMouseInput())
-			basicInstructions.setText("Use arrow keys to move, and use Z, X, C, V, and F to fire. Use Space to pause.");
-		else
-			basicInstructions.setText("Move mouse to move, use mouse buttons to fire, use Space to pause.");
-		
+		//if (!window.useMouseInput())
+		//	basicInstructions.setText("Use arrow keys to move, and use Z, X, C, V, and F to fire. Use Space to pause.");
+		//else
+		//	basicInstructions.setText("Move mouse to move, use mouse buttons to fire, use Space to pause.");
+		basicInstructions.setText("Left and Right to move, and Z to jump.");
 	}
 }
