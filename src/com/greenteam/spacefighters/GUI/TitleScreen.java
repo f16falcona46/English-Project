@@ -30,9 +30,6 @@ public class TitleScreen extends JPanel implements ActionListener {
 	private JButton tutorialButton;
 	private JTextArea basicInstructions;
 	private Window window;
-
-	private double[] xpositions;
-	private double[] ypositions;
 	
 	public TitleScreen(Window window) {
 		this.window = window;
@@ -107,13 +104,6 @@ public class TitleScreen extends JPanel implements ActionListener {
 		tutorialButton = new JButton("Tutorial");
 		tutorialButton.addActionListener(this);
 		this.add(tutorialButton, gbc);
-		
-		xpositions = new double[TitleScreen.NUM_STARS];
-		ypositions = new double[TitleScreen.NUM_STARS];
-		for (int i = 0; i < TitleScreen.NUM_STARS; ++i) {
-			xpositions[i] = Math.random();
-			ypositions[i] = Math.random();
-		}
 	}
 
 	@Override
@@ -135,14 +125,5 @@ public class TitleScreen extends JPanel implements ActionListener {
 		else
 			basicInstructions.setText("Move mouse to move, use mouse buttons to fire, use Space to pause.");
 		
-	}
-	
-	@Override
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		g.setColor(Color.WHITE);
-		for (int i = 0; i < TitleScreen.NUM_STARS; ++i) {
-			g.fillRect((int)(xpositions[i]*this.getWidth()), (int)(ypositions[i]*this.getHeight()), 1, 1);
-		}
 	}
 }

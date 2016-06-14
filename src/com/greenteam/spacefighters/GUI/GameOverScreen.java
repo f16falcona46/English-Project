@@ -61,6 +61,7 @@ public class GameOverScreen extends JPanel implements ActionListener, ComponentL
 			);
 		credits.setOpaque(false);
 		credits.setForeground(Color.LIGHT_GRAY);
+		credits.setEditable(false);
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 2;
