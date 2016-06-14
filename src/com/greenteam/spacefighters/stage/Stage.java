@@ -18,6 +18,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -38,6 +40,11 @@ import com.greenteam.spacefighters.entity.Entity;
 import com.greenteam.spacefighters.entity.entityliving.obstacle.Tile;
 import com.greenteam.spacefighters.entity.entityliving.starship.player.Player;
 
+import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.advanced.AdvancedPlayer;
+import javazoom.jl.player.advanced.PlaybackEvent;
+import javazoom.jl.player.advanced.PlaybackListener;
+
 public class Stage extends JPanel implements ActionListener, MouseListener {
 	private static final int WIDTH = 2400;
 	private static final int HEIGHT= 600;
@@ -57,6 +64,9 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 	
 	public static final double GRAVITY = 9000;
 	public static final int TILE_HEIGHT = 16;
+	private static final double[] BGM_VOLUMES = {
+			0.5, 0.5, 0.5
+		};
 
 	
 	private ConcurrentHashMap<Integer, CopyOnWriteArrayList<Entity>> entities;
@@ -82,6 +92,7 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 	
 	private int width;
 	private int height;
+	private Thread musicThread;
 	
 	public Stage(Window window, int width, int height, LevelLoader levelLoader) {
 		this.window = window;
@@ -395,6 +406,9 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 	
 	public void pause() {
 		timer.stop();
+		if (musicThread != null) {
+			musicThread.stop();
+		}
 		this.add(returnToTitle, returnToTitleGridBagConstraints);
 		pauseResumeButton.setText("Resume");
 		this.revalidate();
@@ -405,6 +419,38 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 		timer.start();
 		this.remove(returnToTitle);
 		pauseResumeButton.setText("Pause");
+		if (musicThread != null) {
+			musicThread.stop();
+		}
+		
+		musicThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					FileInputStream fis = new FileInputStream(LevelLoader.class.getResource("/com/greenteam/spacefighters/assets/gatsby/bgm-"+Integer.toString((Stage.this.getLevelLoader().getLevel()+1))+".mp3").getPath());
+					AdvancedPlayer player = new AdvancedPlayer(fis);
+					player.setPlayBackListener(new PlaybackListener() {
+						@Override
+						public void playbackFinished(PlaybackEvent ev) {
+							try {
+								player.play(0, Integer.MAX_VALUE);
+							} catch (JavaLayerException ex) {
+								ex.printStackTrace();
+							}
+						}
+					});
+					player.play(0, Integer.MAX_VALUE);
+				}
+				catch (JavaLayerException ex) {
+					ex.printStackTrace();
+				}
+				catch (FileNotFoundException ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
+		
+		musicThread.start();
 	}
 	
 	public boolean isPaused() {

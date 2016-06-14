@@ -40,6 +40,8 @@ import com.greenteam.spacefighters.entity.entityliving.starship.Starship;
 import com.greenteam.spacefighters.entity.entityliving.starship.enemy.Enemy;
 import com.greenteam.spacefighters.stage.Stage;
 
+import javazoom.spi.mpeg.sampled.file.MpegAudioFileReader;
+
 public class Player extends Starship {
 	private static final int DEFAULTARMORLEVEL = 0;
 	private static final int DEFAULTWEAPONRYLEVEL= 0;
@@ -61,7 +63,7 @@ public class Player extends Starship {
 	private static final double BOUNDING_BOX_WIDTH = 18;
 	private static final double BOUNDING_BOX_HEIGHT = 36;
 	private static final String[] SOUNDS = {
-			"death.mp3", "jump.mp3"
+			"death.wav", "jump.wav"
 	};
 
 	private int timetofiremissile;
@@ -99,7 +101,7 @@ public class Player extends Starship {
 		for (String sound : SOUNDS) {
 			try {
 				// Open an audio input stream.
-				//URL url = this.getClass().getClassLoader().getResource("/com/greenteam/spacefighters/assets/gatsby/sound-"+sound+".mp3");
+				//URL url = this.getClass().getClassLoader().getResource("/com/greenteam/spacefighters/assets/gatsby/sound-"+sound+".wav");
 				AudioInputStream ais = Player.createReusableAudioInputStream(Player.class.getResource("/com/greenteam/spacefighters/assets/gatsby/sound-"+sound));
 				sounds.put(sound, ais);
 			}
@@ -307,7 +309,7 @@ public class Player extends Starship {
 
 		if (jumpButtonPressed && (collisionState == RectCollisionSide.BOTTOM)) {
 			this.getVelocity().setY(this.getVelocity().getY()-Stage.PLAYER_JUMP_VELOCITY);
-			playSound("jump.mp3");
+			playSound("jump.wav");
 		}
 
 		if (time > HEALTH_REGEN_TIME) {
@@ -429,7 +431,7 @@ public class Player extends Starship {
 
 	@Override
 	public void uponDeath() {
-		playSound("death.mp3");
+		playSound("death.wav");
 		Stage stage = this.getStage();
 		Explosion e = new Explosion(this.getStage(), this.getPosition(), 100);
 		stage.add(e);
@@ -592,7 +594,7 @@ public class Player extends Starship {
 		AudioInputStream ais = null;
 		try
 		{
-			//ais = new WAVAudioFileReader().getAudioInputStream(file);
+			//ais = new MpegAudioFileReader().getAudioInputStream(file);
 			ais = AudioSystem.getAudioInputStream(file);
 			byte[] buffer = new byte[1024 * 32];
 			int read = 0;

@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -20,6 +22,11 @@ import com.greenteam.spacefighters.entity.entityliving.obstacle.TileType;
 import com.greenteam.spacefighters.entity.entityliving.starship.enemy.*;
 import com.greenteam.spacefighters.entity.entityliving.starship.player.Player;
 import com.greenteam.spacefighters.entity.entityliving.starship.player.Player.PlayerShipColor;
+
+import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.advanced.AdvancedPlayer;
+import javazoom.jl.player.advanced.PlaybackEvent;
+import javazoom.jl.player.advanced.PlaybackListener;
 
 public class LevelLoader implements ActionListener {
 	private static final double[] LEVEL_INTERVAL_RATIOS = {1.0, 0.95, 0.9, 0.8, 0.5};
@@ -52,6 +59,8 @@ public class LevelLoader implements ActionListener {
 	private int time;
 	private int level;
 	private Difficulty difficulty;
+	
+	//private Thread musicThread;
 	
 	public LevelLoader(Window window, int width, int height, File f) {
 		stage = new Stage(window, width, height, this);
