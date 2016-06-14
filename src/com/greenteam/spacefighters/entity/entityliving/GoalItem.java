@@ -17,7 +17,7 @@ import com.greenteam.spacefighters.stage.Stage;
 public class GoalItem extends EntityLiving {
 	private static final double GATSBY_DISTANCE_TO_MOVE = 100;
 	private static final double MOVEMENT_RATIO = 0.8;
-	private static final double DISTANCE_TOLER_TO_TARGET = 30;
+	private static final double DISTANCE_TOLER_TO_TARGET = 100;
 	
 	private static BufferedImage GREEN_LIGHT_TEXTURE;
 	

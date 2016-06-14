@@ -1,7 +1,7 @@
 package com.greenteam.spacefighters.common;
 
 public class BoundRect {
-	private static final double DELTA = -0.8;
+	private static final double DELTA = -3;
 	
 	private double midX;
 	private double midY;
@@ -82,7 +82,7 @@ public class BoundRect {
 			}
 		}
 		else {
-			if (wy - DELTA*wy > -hx) {
+			if (wy - DELTA*wy/2 > -hx) {
 				return RectCollisionSide.LEFT;
 			}
 			else {

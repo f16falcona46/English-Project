@@ -160,12 +160,13 @@ public class TestEnemy extends Enemy {
 		case BOTTOM:
 			this.getPosition().setY(this.getPosition().getY()-1);
 			break;
-		default:
+		case NONE:
 			break;
 		}
 		
 		Vec2 nextPos = this.getPosition().add(this.getVelocity().scale(((double)ms)/1000));
 		canMove(nextPos);
+		//System.out.println(this+collisionState.toString());
 		
 		time += ms;
 		
@@ -173,8 +174,10 @@ public class TestEnemy extends Enemy {
 		case LEFT:
 		case RIGHT:
 			//this.getVelocity().setX(0);
+			//System.out.println("bef: "+this.getVelocity());
 			this.getVelocity().setX(-this.getVelocity().getX());
 			this.getAcceleration().setX(-this.getAcceleration().getX());
+			//System.out.println("aft: "+this.getVelocity());
 			break;
 		case TOP:
 		case BOTTOM:
@@ -314,6 +317,7 @@ public class TestEnemy extends Enemy {
 	
 	@Override
 	public boolean canMove(Vec2 newPos) {
+		this.collisionState = RectCollisionSide.NONE;
 		BoundRect rect = new BoundRect(newPos.getX(), newPos.getY(), this.getBoundingBox().getWidth(), this.getBoundingBox().getHeight());
 		for (CopyOnWriteArrayList<Entity> entities : this.getStage().getEntities().values()) {
 			for (Entity e : entities) {
@@ -322,13 +326,13 @@ public class TestEnemy extends Enemy {
 					if (Player.class.isAssignableFrom(e.getSourceClass())) {
 						this.getStage().playerDied();
 					}
-					this.collisionState = rect.whichSideIntersected(e.getBoundingBox());
-					return false;
+					if ((this.collisionState != RectCollisionSide.LEFT) && (this.collisionState != RectCollisionSide.RIGHT)) {
+						this.collisionState = rect.whichSideIntersected(e.getBoundingBox());
+					}
 				}
 			}
 		}
-		this.collisionState = RectCollisionSide.NONE;
-		return true;
+		return (this.collisionState == RectCollisionSide.NONE);
 	}
 
 	@Override
