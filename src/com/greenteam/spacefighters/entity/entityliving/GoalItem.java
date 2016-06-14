@@ -16,7 +16,7 @@ import com.greenteam.spacefighters.stage.Stage;
 
 public class GoalItem extends EntityLiving {
 	private static final double GATSBY_DISTANCE_TO_MOVE = 100;
-	private static final double MOVEMENT_RATIO = 0.8;
+	private static final double MOVEMENT_RATIO = 2.3;
 	private static final double DISTANCE_TOLER_TO_TARGET = 100;
 	
 	private static BufferedImage GREEN_LIGHT_TEXTURE;
@@ -36,7 +36,7 @@ public class GoalItem extends EntityLiving {
 		this.moveWhenGatsbyGetsHere = new BoundRect(this.getPosition().getX(),
 				this.getPosition().getY(),
 				GATSBY_DISTANCE_TO_MOVE,
-				GATSBY_DISTANCE_TO_MOVE
+				GATSBY_DISTANCE_TO_MOVE*10
 				);
 		this.setVelocity(Vec2.ZERO);
 		this.currentDestPosition = 0;
