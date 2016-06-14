@@ -65,6 +65,9 @@ public class Player extends Starship {
 	private static final String[] SOUNDS = {
 			"death.wav", "jump.wav"
 	};
+	private static final String[] LEVEL_CHARACTER_TEXTURE_PREFIXES = {
+			"nick", "purple"
+	};
 
 	private int timetofiremissile;
 	private int chargeLevel;
@@ -120,7 +123,6 @@ public class Player extends Starship {
 		this.setFullHealth();
 		this.setFullCharge();
 		loadImages();
-		System.out.println("reset!");
 		//this.setPosition(new Vec2(this.getStage().getCanvasWidth() / 2 , this.getStage().getCanvasHeight() / 2));
 		//this.setOrientation(new Vec2(0,1));
 	}
@@ -494,23 +496,24 @@ public class Player extends Starship {
 	public void loadImages() {
 		try {
 			textures = new HashMap<MovementState, BufferedImage>();
+			String prefix = LEVEL_CHARACTER_TEXTURE_PREFIXES[this.getStage().getLevelLoader().getLevel()];
 			for (MovementState state : MovementState.values()) {
 				switch (state) {
 				case STATIONARY:
 				case HORIZ3:
-					textures.put(state, ImageIO.read(Player.class.getResource("/com/greenteam/spacefighters/assets/gatsby/nick1.png")));
+					textures.put(state, ImageIO.read(Player.class.getResource("/com/greenteam/spacefighters/assets/gatsby/"+prefix+"1.png")));
 					break;
 				case HORIZ1:
-					textures.put(state, ImageIO.read(Player.class.getResource("/com/greenteam/spacefighters/assets/gatsby/nick2.png")));
+					textures.put(state, ImageIO.read(Player.class.getResource("/com/greenteam/spacefighters/assets/gatsby/"+prefix+"2.png")));
 					break;
 				case HORIZ2:
-					textures.put(state, ImageIO.read(Player.class.getResource("/com/greenteam/spacefighters/assets/gatsby/nick3.png")));
+					textures.put(state, ImageIO.read(Player.class.getResource("/com/greenteam/spacefighters/assets/gatsby/"+prefix+"3.png")));
 					break;
 				case JUMPUP:
-					textures.put(state, ImageIO.read(Player.class.getResource("/com/greenteam/spacefighters/assets/gatsby/nick5.png")));
+					textures.put(state, ImageIO.read(Player.class.getResource("/com/greenteam/spacefighters/assets/gatsby/"+prefix+"5.png")));
 					break;
 				case JUMPFALL:
-					textures.put(state, ImageIO.read(Player.class.getResource("/com/greenteam/spacefighters/assets/gatsby/nick6.png")));
+					textures.put(state, ImageIO.read(Player.class.getResource("/com/greenteam/spacefighters/assets/gatsby/"+prefix+"6.png")));
 					break;
 				}
 			}
