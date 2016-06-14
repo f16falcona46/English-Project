@@ -45,13 +45,11 @@ public class GoalItem extends EntityLiving {
 	@Override
 	public void update(int ms) {
 		super.update(ms);
-		//System.out.println(moveWhenGatsbyGetsHere);
 		moveWhenGatsbyGetsHere.setX(this.getPosition().getX());
 		moveWhenGatsbyGetsHere.setY(this.getPosition().getY());
 		this.setVelocity(destPositions.get(currentDestPosition).subtract(this.getPosition()).scale(MOVEMENT_RATIO));
 		if ((this.getVelocity().magnitude() < (DISTANCE_TOLER_TO_TARGET*MOVEMENT_RATIO)) && this.getStage().getPlayer().getBoundingBox().intersects(moveWhenGatsbyGetsHere)) {
 			++currentDestPosition;
-			System.out.println(this.getVelocity());
 			if (currentDestPosition >= destPositions.size()) this.uponDeath();
 		}
 	}

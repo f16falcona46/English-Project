@@ -87,16 +87,16 @@ public class LevelLoader implements ActionListener {
 			array.clear();
 		
 		try {
-			BufferedImage map = ImageIO.read(Player.class.getResource("/com/greenteam/spacefighters/assets/gatsby/map-1.png"));
+			BufferedImage map = ImageIO.read(Player.class.getResource("/com/greenteam/spacefighters/assets/gatsby/map-"+Integer.toString(this.getLevel()+1)+".png"));
 			stage.setCanvasWidth(map.getWidth()*Stage.TILE_HEIGHT);
 			stage.setCanvasHeight(map.getHeight()*Stage.TILE_HEIGHT);
-			for (int i = 0; i < map.getHeight(); ++i) {
-				for (int j = 0; j < map.getWidth(); ++j) {
-					int color = map.getRGB(j, i);
+			for (int i = 0; i < map.getWidth(); ++i) {
+				for (int j = 0; j < map.getHeight(); ++j) {
+					int color = map.getRGB(i, j);
 					TileType type = Tile.interpretColor(color);
 					//System.out.println(j+" "+i+" "+type);
 					if (type == TileType.UNKNOWN) System.out.println(color&0xffffff);
-					Tile.doTile(type,j,i,stage);
+					Tile.doTile(type,i,j,stage);
 				}
 			}
 		}

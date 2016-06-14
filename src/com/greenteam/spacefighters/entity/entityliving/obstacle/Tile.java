@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.imageio.ImageIO;
 
@@ -137,6 +138,8 @@ public class Tile extends Obstacle {
 			return TileType.AIR;
 		case 2273612: //start position of goal item (dark green)
 			return TileType.GOALITEMSTART;
+		case 11920925: //goal waypoint (light green)
+			return TileType.GOALITEMWAYPOINT;
 		default:
 			return TileType.UNKNOWN;
 		}
@@ -170,8 +173,16 @@ public class Tile extends Obstacle {
 		case GOALITEMSTART:
 			entityToAdd = new GoalItem(stage);
 			((GoalItem)entityToAdd).addDest(new Vec2(Stage.TILE_HEIGHT/2+Stage.TILE_HEIGHT*x, Stage.TILE_HEIGHT/2+Stage.TILE_HEIGHT*y));
-			((GoalItem)entityToAdd).addDest(new Vec2(Stage.TILE_HEIGHT/2+Stage.TILE_HEIGHT*x+300, Stage.TILE_HEIGHT/2+Stage.TILE_HEIGHT*y));
 			break;
+		case GOALITEMWAYPOINT:
+			for (CopyOnWriteArrayList<Entity> entities : stage.getEntities().values()) {
+				for (Entity e : entities) {
+					if (e.getClass() == GoalItem.class) {
+						((GoalItem)e).addDest(new Vec2(Stage.TILE_HEIGHT/2+Stage.TILE_HEIGHT*x, Stage.TILE_HEIGHT/2+Stage.TILE_HEIGHT*y));
+					}
+				}
+			}
+			return;
 		case AIR:
 			return;
 		case UNKNOWN:
