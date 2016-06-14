@@ -23,7 +23,7 @@ import com.greenteam.spacefighters.stage.Stage;
 public class GameOverScreen extends JPanel implements ActionListener, ComponentListener {
 	private static final long serialVersionUID = -20160518L;
 	
-	private JLabel score;
+	private JLabel message;
 	private JButton returnToMain;
 	private Stage stage;
 	private JFrame window;
@@ -48,11 +48,10 @@ public class GameOverScreen extends JPanel implements ActionListener, ComponentL
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		gbc.weighty = 1;
-		//score = new JLabel("Score: 0");
-		score = new JLabel("");
-		score.setForeground(Color.LIGHT_GRAY);
-		score.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 36));
-		this.add(score, gbc);
+		message = new JLabel("");
+		message.setForeground(Color.LIGHT_GRAY);
+		message.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 36));
+		this.add(message, gbc);
 		
 		JTextArea credits = new JTextArea("Background Music (Carraway): Big Beat Mario by Triple_sSs\n"+
 				"Background Music (Gatsby): Thwomp Volcano from Mario and Luigi: Partners in Time\n"+
@@ -105,6 +104,6 @@ public class GameOverScreen extends JPanel implements ActionListener, ComponentL
 
 	@Override
 	public void componentShown(ComponentEvent arg0) {
-		score.setText("Score: "+Integer.toString(stage.getPlayer().getScore()));
+		message.setText("Score: "+Integer.toString(stage.getPlayer().getScore()));
 	}
 }

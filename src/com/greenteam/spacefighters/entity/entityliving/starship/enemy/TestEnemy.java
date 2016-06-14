@@ -339,12 +339,12 @@ public class TestEnemy extends Enemy {
 	public void fire(int type) {
 		//do nothing
 	}
-}
+	
+	enum MovementState {
+		STATIONARY, HORIZ1, HORIZ2, HORIZ3, JUMPUP, JUMPFALL
+	}
 
-enum MovementState {
-	STATIONARY, HORIZ1, HORIZ2, HORIZ3, JUMPUP, JUMPFALL
-}
-
-enum Direction {
-	LEFT, RIGHT
+	enum Direction {
+		LEFT, RIGHT
+	}
 }
