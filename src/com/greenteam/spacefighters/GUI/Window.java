@@ -139,7 +139,7 @@ public class Window extends JFrame implements WindowListener {
 		if (card.equals(STAGE)) {
 			if (title.isVisible()) {
 				stage.getPlayer().setScore(0);
-				stage.getPlayer().setLives(3);
+				stage.getPlayer().setLives(5);
 				loader.startLevel();
 			}
 			stage.resume();

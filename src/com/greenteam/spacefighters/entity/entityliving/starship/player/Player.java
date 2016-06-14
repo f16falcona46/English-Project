@@ -479,6 +479,7 @@ public class Player extends Starship {
 						this.getStage().playerDied();
 					}
 					if ((e instanceof Gatsby) || (e instanceof GameOverSpikes)) {
+						if (e instanceof GameOverSpikes) playSound("death.wav");
 						this.getStage().win();
 					}
 					this.collisionState = rect.whichSideIntersected(e.getBoundingBox());
