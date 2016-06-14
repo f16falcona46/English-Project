@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 
 import com.greenteam.spacefighters.common.Vec2;
 import com.greenteam.spacefighters.entity.Entity;
+import com.greenteam.spacefighters.entity.entityliving.GoalItem;
 import com.greenteam.spacefighters.entity.entityliving.starship.enemy.Enemy;
 import com.greenteam.spacefighters.entity.entityliving.starship.enemy.TestEnemy;
 import com.greenteam.spacefighters.entity.entityliving.starship.player.Player;
@@ -132,8 +133,10 @@ public class Tile extends Obstacle {
 			return TileType.BRICK;
 		case 15539236: //spikes (red)
 			return TileType.SPIKES;
-		case 0xffffff:
+		case 0xffffff: //empty space (white)
 			return TileType.AIR;
+		case 2273612: //start position of goal item (dark green)
+			return TileType.GOALITEMSTART;
 		default:
 			return TileType.UNKNOWN;
 		}
@@ -164,6 +167,11 @@ public class Tile extends Obstacle {
 			entityToAdd.setPosition(new Vec2(Stage.TILE_HEIGHT+Stage.TILE_HEIGHT*x, Stage.TILE_HEIGHT*(1+y)-6));
 			stage.add(entityToAdd);
 			return;
+		case GOALITEMSTART:
+			entityToAdd = new GoalItem(stage);
+			((GoalItem)entityToAdd).addDest(new Vec2(Stage.TILE_HEIGHT/2+Stage.TILE_HEIGHT*x, Stage.TILE_HEIGHT/2+Stage.TILE_HEIGHT*y));
+			((GoalItem)entityToAdd).addDest(new Vec2(Stage.TILE_HEIGHT/2+Stage.TILE_HEIGHT*x+300, Stage.TILE_HEIGHT/2+Stage.TILE_HEIGHT*y));
+			break;
 		case AIR:
 			return;
 		case UNKNOWN:
