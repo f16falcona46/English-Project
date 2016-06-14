@@ -128,7 +128,6 @@ public class Window extends JFrame implements WindowListener {
 			if (title.isVisible()) {
 				stage.getPlayer().setScore(0);
 				stage.getPlayer().setLives(3);
-				loader.setLevel(0);
 				loader.startLevel();
 			}
 			stage.resume();

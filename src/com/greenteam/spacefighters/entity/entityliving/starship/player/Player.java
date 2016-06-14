@@ -119,8 +119,10 @@ public class Player extends Starship {
 	public void reset() {
 		this.setFullHealth();
 		this.setFullCharge();
-		this.setPosition(new Vec2(this.getStage().getCanvasWidth() / 2 , this.getStage().getCanvasHeight() / 2));
-		this.setOrientation(new Vec2(0,1));
+		loadImages();
+		System.out.println("reset!");
+		//this.setPosition(new Vec2(this.getStage().getCanvasWidth() / 2 , this.getStage().getCanvasHeight() / 2));
+		//this.setOrientation(new Vec2(0,1));
 	}
 
 	public void setColor(PlayerShipColor color) {

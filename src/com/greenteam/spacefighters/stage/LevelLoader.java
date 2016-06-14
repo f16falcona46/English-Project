@@ -125,7 +125,7 @@ public class LevelLoader implements ActionListener {
 		*/
 		
 		stage.add(p);
-		//p.reset();
+		p.reset();
 	}
 	
 	private void nextLevel() {

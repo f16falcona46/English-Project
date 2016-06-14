@@ -1,6 +1,7 @@
 package com.greenteam.spacefighters.GUI;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
@@ -23,11 +24,12 @@ public class TitleScreen extends JPanel implements ActionListener {
 	private static final long serialVersionUID = -8833873967148164038L;
 	
 	private JLabel title;
-	private JButton startButtonKeyboardInput;
+	private JButton startGatsby;
 	//private JButton settingsButton;
 	//private JButton tutorialButton;
 	private JTextArea basicInstructions;
 	private Window window;
+	private JButton startNick;
 	
 	public TitleScreen(Window window) {
 		this.window = window;
@@ -80,15 +82,28 @@ public class TitleScreen extends JPanel implements ActionListener {
 		gbc.gridy = 2;
 		gbc.weightx = 1;
 		gbc.weighty = 1;
-		gbc.gridwidth = 2;
-		startButtonKeyboardInput = new JButton("Start");
-		startButtonKeyboardInput.addActionListener(this);
-		this.add(startButtonKeyboardInput, gbc);
+		startNick = new JButton("Play as Nick");
+		startNick.addActionListener(this);
+		this.add(startNick, gbc);
+		
+		gbc = new GridBagConstraints();
+		gbc.gridx = 1;
+		gbc.gridy = 2;
+		gbc.weightx = 1;
+		gbc.weighty = 1;
+		startGatsby = new JButton("Play as Gatsby");
+		startGatsby.addActionListener(this);
+		this.add(startGatsby, gbc);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent ev) {
-		if (ev.getSource() == startButtonKeyboardInput) {
+		if (ev.getSource() == startNick) {
+			window.getStage().getLevelLoader().setLevel(0);
+			window.setCard(Window.STAGE);
+		}
+		else if (ev.getSource() == startGatsby) {
+			window.getStage().getLevelLoader().setLevel(1);
 			window.setCard(Window.STAGE);
 		}
 	}

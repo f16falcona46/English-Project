@@ -426,7 +426,7 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 			public void run() {
 				try {
 					while (!musicThread.isInterrupted()) {
-						InputStream is = this.getClass().getResourceAsStream("/com/greenteam/spacefighters/assets/gatsby/bgm-"+Integer.toString((Stage.this.getLevelLoader().getLevel()+2))+".mp3");
+						InputStream is = this.getClass().getResourceAsStream("/com/greenteam/spacefighters/assets/gatsby/bgm-"+Integer.toString((Stage.this.getLevelLoader().getLevel()+1))+".mp3");
 						AdvancedPlayer player = new AdvancedPlayer(is);
 						player.play(0, Integer.MAX_VALUE);
 					}

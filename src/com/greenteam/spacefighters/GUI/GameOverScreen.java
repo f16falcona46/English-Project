@@ -48,7 +48,8 @@ public class GameOverScreen extends JPanel implements ActionListener, ComponentL
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		gbc.weighty = 1;
-		score = new JLabel("Score: 0");
+		//score = new JLabel("Score: 0");
+		score = new JLabel("");
 		score.setForeground(Color.LIGHT_GRAY);
 		score.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 36));
 		this.add(score, gbc);
