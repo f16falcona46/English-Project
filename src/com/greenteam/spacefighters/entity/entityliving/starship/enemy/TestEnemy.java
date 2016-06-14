@@ -146,16 +146,34 @@ public class TestEnemy extends Enemy {
 	
 	@Override
 	public void update(int ms) {
+		canMove(this.getPosition());
+		switch (collisionState) {
+		case LEFT:
+			this.getPosition().setX(this.getPosition().getX()+1);
+			break;
+		case RIGHT:
+			this.getPosition().setX(this.getPosition().getX()-1);
+			break;
+		case TOP:
+			this.getPosition().setY(this.getPosition().getY()+1);
+			break;
+		case BOTTOM:
+			this.getPosition().setY(this.getPosition().getY()-1);
+			break;
+		default:
+			break;
+		}
+		
 		Vec2 nextPos = this.getPosition().add(this.getVelocity().scale(((double)ms)/1000));
 		canMove(nextPos);
 		
-		//System.out.println(this.collisionState);
 		time += ms;
 		
 		switch (collisionState) {
 		case LEFT:
 		case RIGHT:
-			this.getVelocity().setX(0);
+			//this.getVelocity().setX(0);
+			this.getVelocity().setX(-this.getVelocity().getX());
 			this.getAcceleration().setX(-this.getAcceleration().getX());
 			break;
 		case TOP:

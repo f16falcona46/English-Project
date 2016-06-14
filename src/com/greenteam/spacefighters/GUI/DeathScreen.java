@@ -84,6 +84,7 @@ public class DeathScreen extends JPanel implements ActionListener, ComponentList
 	@Override
 	public void actionPerformed(ActionEvent ev) {
 		if (ev.getSource() == returnToGame) {
+			stage.getLevelLoader().startLevel();
 			stage.resume();
 			((CardLayout)this.getParent().getLayout()).show(this.getParent(), Window.STAGE);
 		}

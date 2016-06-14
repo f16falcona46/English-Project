@@ -160,8 +160,8 @@ public class Tile extends Obstacle {
 			return;
 		case REDENEMY:
 			entityToAdd = new TestEnemy(stage);
-			entityToAdd.setAcceleration(new Vec2(Stage.PLAYER_HORIZONTAL_SPEED/3, 0));
-			entityToAdd.setPosition(new Vec2(Stage.TILE_HEIGHT+Stage.TILE_HEIGHT*x, Stage.TILE_HEIGHT*(1+y)-7));
+			entityToAdd.setAcceleration(new Vec2(-Stage.PLAYER_HORIZONTAL_SPEED/3, Stage.GRAVITY));
+			entityToAdd.setPosition(new Vec2(Stage.TILE_HEIGHT+Stage.TILE_HEIGHT*x, Stage.TILE_HEIGHT*(1+y)-6));
 			stage.add(entityToAdd);
 			return;
 		case AIR:

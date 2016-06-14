@@ -27,14 +27,15 @@ public class HUD {
 		g.setColor(new Color(.6f,.3f,.2f,.4f));
 		if (charge <= fullcharge) g.fillRect(150+(int)(200*charge/fullcharge), 40, (int)(200*(1-(double)charge/fullcharge)), 10);
 		
-		g.setColor(Color.WHITE);
+		g.setColor(Color.DARK_GRAY);
 		Font f = new Font(Font.MONOSPACED, Font.BOLD, 18);
 		
 		g.setFont(f);
 		g.drawString(String.format("Score: %d", p.getScore()), 10, 23);
 		g.drawString(String.format("Level: %d", stage.getLevelLoader().getLevel()+1), 10, 50);
-		String livesText = "Lives:";
+		String livesText = "Lives: "+p.getLives();
 		g.drawString(livesText, 10, 77);
+		/*
 		Image tex = p.getTexture();
 		int height = 24;
 		int width= (int)(tex.getWidth(null) * height / tex.getHeight(null));
@@ -42,6 +43,7 @@ public class HUD {
 		for (int i = 0; i < p.getLives(); i++) {
 			g.drawImage(tex, texOffsetX + i * (width + width / 2), 59, width, height, null);	
 		}
+		*/
 		g.drawString("CHARGE", 215, 50);
 		
 		int health = p.getHealth();
@@ -50,7 +52,7 @@ public class HUD {
 		g.fillRect(150, 5, (int)(200*(double)health/p.getMaxHealth()), 25);
 		g.setColor(new Color(.7f,.2f,0f,.4f));
 		if (health <= p.getMaxHealth()) g.fillRect(150+(int)(200*health/p.getMaxHealth()), 5, (int)(200*(1-(double)health/p.getMaxHealth())), 25);
-		g.setColor(Color.WHITE);
+		g.setColor(Color.DARK_GRAY);
 		g.drawString(String.format("%d/%d", health, p.getMaxHealth()), 215, 23);
 		
 		if (gameOver) {

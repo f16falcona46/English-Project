@@ -184,7 +184,7 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 		g.setColor(new java.awt.Color(210, 210, 255));
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		
-		Vec2 offsetMax = new Vec2(WIDTH - this.getWidth(), HEIGHT - this.getHeight());
+		Vec2 offsetMax = new Vec2(this.getCanvasWidth() - this.getWidth(), this.getCanvasHeight() - this.getHeight());
 		Vec2 offsetMin = Vec2.ZERO;
 		
 		Vec2 offset = new Vec2(player.getPosition().getX() - this.getWidth() / 2,
