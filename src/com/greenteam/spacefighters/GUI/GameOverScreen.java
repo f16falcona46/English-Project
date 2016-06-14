@@ -16,21 +16,17 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 import com.greenteam.spacefighters.stage.Stage;
 
 public class GameOverScreen extends JPanel implements ActionListener, ComponentListener {
 	private static final long serialVersionUID = -20160518L;
 	
-	private static final int NUM_STARS = 120;
-	
 	private JLabel score;
 	private JButton returnToMain;
 	private Stage stage;
 	private JFrame window;
-
-	private double[] xpositions;
-	private double[] ypositions;
 	
 	public GameOverScreen(Stage stage, JFrame window) {
 		this.stage = stage;
@@ -57,33 +53,29 @@ public class GameOverScreen extends JPanel implements ActionListener, ComponentL
 		score.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 36));
 		this.add(score, gbc);
 		
-		//JTextArea credits = new JTextArea("Background Music: Big Beat Mario by ")
-		
+		JTextArea credits = new JTextArea("Background Music: Big Beat Mario by Triple_sSs\n"+
+				"Sounds: Jump from Super Mario World, Death from Super Mario All-Stars\n"+
+				"Sprites: Sushanth Neerumalla\n"+
+				"Tiles, GUI, AI, Controls: Jason Li\n"+
+				"Rendering: Daniel Kelly"
+			);
+		credits.setOpaque(false);
+		credits.setForeground(Color.LIGHT_GRAY);
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 2;
+		gbc.insets = new Insets(20, 20, 20, 20);
+		this.add(credits, gbc);
+		
+		gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 3;
 		gbc.insets = new Insets(20, 20, 20, 20);
 		returnToMain = new JButton("Return to Main Menu");
 		returnToMain.addActionListener(this);
 		this.add(returnToMain, gbc);
 		
 		this.addComponentListener(this);
-		
-		xpositions = new double[GameOverScreen.NUM_STARS];
-		ypositions = new double[GameOverScreen.NUM_STARS];
-		for (int i = 0; i < GameOverScreen.NUM_STARS; ++i) {
-			xpositions[i] = Math.random();
-			ypositions[i] = Math.random();
-		}
-	}
-
-	@Override
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		g.setColor(Color.WHITE);
-		for (int i = 0; i < GameOverScreen.NUM_STARS; ++i) {
-			g.fillRect((int)(xpositions[i]*this.getWidth()), (int)(ypositions[i]*this.getHeight()), 1, 1);
-		}
 	}
 
 	@Override

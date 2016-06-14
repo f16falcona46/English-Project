@@ -18,9 +18,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -422,7 +424,7 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 			public void run() {
 				try {
 					while (!musicThread.isInterrupted()) {
-						FileInputStream fis = new FileInputStream(LevelLoader.class.getResource("/com/greenteam/spacefighters/assets/gatsby/bgm-"+Integer.toString((Stage.this.getLevelLoader().getLevel()+1))+".mp3").getPath());
+						FileInputStream fis = new FileInputStream(new File(LevelLoader.class.getResource("/com/greenteam/spacefighters/assets/gatsby/bgm-"+Integer.toString((Stage.this.getLevelLoader().getLevel()+1))+".mp3").toURI()));
 						AdvancedPlayer player = new AdvancedPlayer(fis);
 						/*
 						player.setPlayBackListener(new PlaybackListener() {
@@ -445,7 +447,7 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 				catch (FileNotFoundException ex) {
 					ex.printStackTrace();
 				}
-				catch (IOException ex) {
+				catch (URISyntaxException ex) {
 					ex.printStackTrace();
 				}
 			}
