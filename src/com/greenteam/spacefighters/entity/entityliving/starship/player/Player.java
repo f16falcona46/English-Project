@@ -31,6 +31,8 @@ import com.greenteam.spacefighters.common.Vec2;
 import com.greenteam.spacefighters.entity.Entity;
 import com.greenteam.spacefighters.entity.entityliving.EntityLiving;
 import com.greenteam.spacefighters.entity.entityliving.Explosion;
+import com.greenteam.spacefighters.entity.entityliving.Gatsby;
+import com.greenteam.spacefighters.entity.entityliving.obstacle.GameOverSpikes;
 import com.greenteam.spacefighters.entity.entityliving.obstacle.Obstacle;
 import com.greenteam.spacefighters.entity.entityliving.projectile.ExplosiveProjectile;
 import com.greenteam.spacefighters.entity.entityliving.projectile.HomingProjectile;
@@ -103,8 +105,6 @@ public class Player extends Starship {
 		sounds = new HashMap<String, AudioInputStream>();
 		for (String sound : SOUNDS) {
 			try {
-				// Open an audio input stream.
-				//URL url = this.getClass().getClassLoader().getResource("/com/greenteam/spacefighters/assets/gatsby/sound-"+sound+".wav");
 				AudioInputStream ais = Player.createReusableAudioInputStream(Player.class.getResource("/com/greenteam/spacefighters/assets/gatsby/sound-"+sound));
 				sounds.put(sound, ais);
 			}
@@ -123,8 +123,6 @@ public class Player extends Starship {
 		this.setFullHealth();
 		this.setFullCharge();
 		loadImages();
-		//this.setPosition(new Vec2(this.getStage().getCanvasWidth() / 2 , this.getStage().getCanvasHeight() / 2));
-		//this.setOrientation(new Vec2(0,1));
 	}
 
 	public void setColor(PlayerShipColor color) {
@@ -165,33 +163,10 @@ public class Player extends Starship {
 	public void render(Graphics g) {
 		Vec2 pos = this.getPosition();
 		if (couldLoadImage) {
-			/*
-			switch (this.movementState) {
-			case HORIZ1:
-				g.setColor(java.awt.Color.GREEN);
-				break;
-			case HORIZ2:
-				g.setColor(java.awt.Color.RED);
-				break;
-			case HORIZ3:
-				g.setColor(java.awt.Color.YELLOW);
-				break;
-			case JUMPUP:
-				g.setColor(java.awt.Color.PINK);
-				break;
-			case JUMPFALL:
-				g.setColor(java.awt.Color.BLUE);
-				break;
-			case STATIONARY:
-				g.setColor(java.awt.Color.WHITE);
-				break;
-			}
-			 */
 			int x = (int)this.getBoundingBox().getX();
 			int y = (int)this.getBoundingBox().getY();
 			int w = (int)this.getBoundingBox().getWidth();
 			int h = (int)this.getBoundingBox().getHeight();
-			//g.fillRect(x-w/2, y-h/2, w, h);
 			BufferedImage tex = textures.get(movementState);
 
 			AffineTransform tx = null;
@@ -232,7 +207,6 @@ public class Player extends Starship {
 		Vec2 nextPos = this.getPosition().add(this.getVelocity().scale(((double)ms)/1000));
 		canMove(nextPos);
 
-		//System.out.println(this.collisionState);
 		time += ms;
 
 		switch (collisionState) {
@@ -316,31 +290,6 @@ public class Player extends Starship {
 			playSound("jump.wav");
 		}
 
-		if (time > HEALTH_REGEN_TIME) {
-			if (this.getHealth() < this.getMaxHealth()) {
-				this.setHealth(this.getHealth()+1);
-			}
-			time = 0;
-		}
-		for (CopyOnWriteArrayList<Entity> array : this.getStage().getEntities().values()) {
-			for (Entity e : array) {
-				if (e == this) continue;
-				if (this.overlaps(e) &&
-						(Obstacle.class.isAssignableFrom(e.getSourceClass()) ||
-								Enemy.class.isAssignableFrom(e.getSourceClass())) &&
-						e instanceof EntityLiving && !((EntityLiving)e).isDead()) {
-					((EntityLiving)e).damage(this, this.getDamage());
-				}
-			}
-		}
-		boolean hasAugmentedCharge = this.getCharge() > this.getMaxCharge();
-		if (!hasAugmentedCharge) {
-			chargeLevel += ms/5;
-			if (chargeLevel > Player.FULLCHARGE) {
-				chargeLevel = Player.FULLCHARGE;
-			}
-		}
-
 		double speedY = getVelocity().getY();
 		double dragY = speedY * speedY * DRAG_Y * Math.signum(speedY);
 		this.getVelocity().setY(this.getVelocity().getY() - dragY);
@@ -375,62 +324,7 @@ public class Player extends Starship {
 
 	@Override
 	public void fire(int type) {
-		Stage stage = this.getStage();
-		int damage = 10 * (getWeaponryMultiplier() + 1);
-		Vec2 playerVel = this.getVelocity();
-		switch(type) {
-		case 0 :
-		{
-			if (chargeLevel >= LinearProjectile.getEnergyCost()) {
-				--timetofiremissile;
-				Projectile proj = new LinearProjectile(stage, DEFAULTWEAPONRYHEALTH, damage, this.getPosition(), getOrientation().scale(PLAYER_PROJECTILE_SPEED).multiply(new Vec2(1, -1)).add(playerVel), this);
-				stage.add(proj);
-				if (timetofiremissile == 0) {
-					proj = new HomingProjectile(stage, DEFAULTWEAPONRYHEALTH, damage, MISSILE_SPEED, this.getPosition(), getOrientation().scale(MISSILE_SPEED).multiply(new Vec2(1, -1)).add(playerVel), this);
-					stage.add(proj);
-					timetofiremissile = GUN_TO_MISSILE_RATIO;
-				}
-				chargeLevel -= LinearProjectile.getEnergyCost();
-			}
-		}
-		break;
-		case 1 :
-		{
-			if (chargeLevel >= HomingProjectile.getEnergyCost()*MISSILE_SPREAD_COUNT) {
-				for (int i = 0; i < MISSILE_SPREAD_COUNT; ++i) {
-					Projectile proj = new HomingProjectile(stage, DEFAULTWEAPONRYHEALTH, damage, MISSILE_SPEED, this.getPosition(), getOrientation().scale(MISSILE_SPEED).multiply(new Vec2(1, -1)).rotate(new Vec2(0,0), (i-(double)MISSILE_SPREAD_COUNT/2)/MISSILE_SPREAD_COUNT*2*Math.PI).add(playerVel), this);
-					stage.add(proj);
-				}
-				chargeLevel -= HomingProjectile.getEnergyCost()*MISSILE_SPREAD_COUNT;
-			}
-		}
-		break;
-		case 2 :
-		{
-			if (chargeLevel >= ExplosiveProjectile.getEnergyCost()) {
-				Projectile proj = new ExplosiveProjectile(stage, DEFAULTWEAPONRYHEALTH, damage, this.getPosition(), getOrientation().scale(EXPLOSIVE_SPEED).multiply(new Vec2(1, -1)).add(playerVel), this);
-				stage.add(proj);
-				chargeLevel -= ExplosiveProjectile.getEnergyCost();
-			}
-		}
-		break;
-		case 3 :
-		{
-			if (chargeLevel >= ExplosiveProjectile.getEnergyCost()) {
-				Projectile proj = new ExplosiveProjectile(stage, DEFAULTWEAPONRYHEALTH, damage, this.getPosition(), Vec2.ZERO, this);
-				stage.add(proj);
-				chargeLevel -= ExplosiveProjectile.getEnergyCost();
-			}
-		}
-		break;
-		case 4 :
-		{
-
-		}
-		break;
-		default :
-			break;
-		}
+		//do nothing
 	}
 
 	@Override
@@ -584,6 +478,9 @@ public class Player extends Starship {
 					if (Enemy.class.isAssignableFrom(e.getSourceClass())) {
 						this.getStage().playerDied();
 					}
+					if ((e instanceof Gatsby) || (e instanceof GameOverSpikes)) {
+						this.getStage().win();
+					}
 					this.collisionState = rect.whichSideIntersected(e.getBoundingBox());
 					return false;
 				}
@@ -593,43 +490,35 @@ public class Player extends Starship {
 		return true;
 	}
 
-	private static AudioInputStream createReusableAudioInputStream(URL file) 
-			throws IOException, UnsupportedAudioFileException
-	{
+	private static AudioInputStream createReusableAudioInputStream(URL file) throws IOException, UnsupportedAudioFileException {
 		AudioInputStream ais = null;
-		try
-		{
-			//ais = new MpegAudioFileReader().getAudioInputStream(file);
+		try {
 			ais = AudioSystem.getAudioInputStream(file);
 			byte[] buffer = new byte[1024 * 32];
 			int read = 0;
-			ByteArrayOutputStream baos = 
-					new ByteArrayOutputStream(buffer.length);
-			while ((read = ais.read(buffer, 0, buffer.length)) != -1)
-			{
+			ByteArrayOutputStream baos = new ByteArrayOutputStream(buffer.length);
+			while ((read = ais.read(buffer, 0, buffer.length)) != -1) {
 				baos.write(buffer, 0, read);
 			}
-			AudioInputStream reusableAis = 
-					new AudioInputStream(
-							new ByteArrayInputStream(baos.toByteArray()),
-							ais.getFormat(),
-							AudioSystem.NOT_SPECIFIED);
+			AudioInputStream reusableAis = new AudioInputStream(
+				new ByteArrayInputStream(baos.toByteArray()),
+				ais.getFormat(),
+				AudioSystem.NOT_SPECIFIED);
 			return reusableAis;
 		}
-		finally
-		{
+		finally {
 			if (ais != null)
 			{
 				ais.close();
 			}
 		}
 	}
-}
+	
+	enum MovementState {
+		STATIONARY, HORIZ1, HORIZ2, HORIZ3, JUMPUP, JUMPFALL
+	}
 
-enum MovementState {
-	STATIONARY, HORIZ1, HORIZ2, HORIZ3, JUMPUP, JUMPFALL
-}
-
-enum Direction {
-	LEFT, RIGHT
+	enum Direction {
+		LEFT, RIGHT
+	}
 }

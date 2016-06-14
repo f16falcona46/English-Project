@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 
 import com.greenteam.spacefighters.common.Vec2;
 import com.greenteam.spacefighters.entity.Entity;
+import com.greenteam.spacefighters.entity.entityliving.Gatsby;
 import com.greenteam.spacefighters.entity.entityliving.GoalItem;
 import com.greenteam.spacefighters.entity.entityliving.starship.enemy.Enemy;
 import com.greenteam.spacefighters.entity.entityliving.starship.enemy.Policeman;
@@ -50,11 +51,6 @@ public class Tile extends Obstacle {
 		this.getBoundingBox().setWidth(Stage.TILE_HEIGHT);
 		this.getBoundingBox().setHeight(Stage.TILE_HEIGHT);
 		this.setTexture(null);
-	}
-
-	@Override
-	public void update(int ms) {
-		super.update(ms);
 	}
 	
 	@Override
@@ -145,8 +141,12 @@ public class Tile extends Obstacle {
 			return TileType.GOALITEMSTART;
 		case 11920925: //goal waypoint (light green)
 			return TileType.GOALITEMWAYPOINT;
-		case 16756425: //pink
+		case 16756425: //soil with collision detection (pink)
 			return TileType.COLLISIONDETECTEDSOIL;
+		case 10082794: //spikes that immediately cause a game over (sky blue)
+			return TileType.GAMEOVERSPIKES;
+		case 10701220: //gatsby goal entity (purple)
+			return TileType.GOALGATSBY;
 		default:
 			return TileType.UNKNOWN;
 		}
@@ -187,6 +187,9 @@ public class Tile extends Obstacle {
 			entityToAdd.setPosition(new Vec2(Stage.TILE_HEIGHT+Stage.TILE_HEIGHT*x, Stage.TILE_HEIGHT*(1+y)-6));
 			stage.add(entityToAdd);
 			return;
+		case GOALGATSBY:
+			entityToAdd = new Gatsby(stage);
+			break;
 		case GOALITEMSTART:
 			entityToAdd = new GoalItem(stage);
 			((GoalItem)entityToAdd).addDest(new Vec2(Stage.TILE_HEIGHT/2+Stage.TILE_HEIGHT*x, Stage.TILE_HEIGHT/2+Stage.TILE_HEIGHT*y));
@@ -200,9 +203,14 @@ public class Tile extends Obstacle {
 				}
 			}
 			return;
+		case GAMEOVERSPIKES:
+			entityToAdd = new GameOverSpikes(stage);
+			break;
 		case AIR:
 			return;
 		case UNKNOWN:
+			return;
+		default:
 			return;
 		}
 		entityToAdd.setPosition(new Vec2(Stage.TILE_HEIGHT/2+Stage.TILE_HEIGHT*x, Stage.TILE_HEIGHT/2+Stage.TILE_HEIGHT*y));

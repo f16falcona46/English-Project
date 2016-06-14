@@ -32,6 +32,7 @@ public class Window extends JFrame implements WindowListener {
 	public static final String SETTINGSSCREEN = "SETTINGSSCREEN";
 	public static final String LEVELINCREMENTSCREEN = "LEVELINCREMENTSCREEN";
 	public static final String DEATHSCREEN = "DEATHSCREEN";
+	public static final String WINSCREEN = "WINSCREEN";
 	
 	private Stage stage;
 	private LevelLoader loader;
@@ -44,6 +45,7 @@ public class Window extends JFrame implements WindowListener {
 	private LevelIncrementScreen levelscreen;
 	private DeathScreen deathscreen;
 	private SettingsScreen settings;
+	private WinScreen winscreen;
 	private boolean mouseInput;
 	
 	public Window() {
@@ -64,6 +66,7 @@ public class Window extends JFrame implements WindowListener {
 		levelscreen = new LevelIncrementScreen(stage);
 		deathscreen = new DeathScreen(stage);
 		settings = new SettingsScreen(this);
+		winscreen = new WinScreen(stage);
 		
 		contentPane.add(powerupTutorial, POWERUPTUTORIAL);
 		contentPane.add(enemyTutorial, ENEMY_TUTORIAL);
@@ -76,6 +79,8 @@ public class Window extends JFrame implements WindowListener {
 		contentPane.add(levelscreen, LEVELINCREMENTSCREEN);
 		contentPane.add(deathscreen, DEATHSCREEN);
 		contentPane.add(settings, SETTINGSSCREEN);
+		contentPane.add(winscreen, WINSCREEN);
+		
 		((CardLayout)contentPane.getLayout()).show(contentPane, TITLE_SCREEN);
 		
 		this.setBounds(new Rectangle(Window.WIDTH, Window.HEIGHT));

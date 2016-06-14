@@ -780,4 +780,8 @@ public class Stage extends JPanel implements ActionListener, MouseListener {
 		//JOptionPane.showMessageDialog(this, "You died!", "Game Over", JOptionPane.INFORMATION_MESSAGE);
 		this.getPlayer().uponDeath();
 	}
+
+	public void win() {
+		window.setCard(Window.WINSCREEN);
+	}
 }
