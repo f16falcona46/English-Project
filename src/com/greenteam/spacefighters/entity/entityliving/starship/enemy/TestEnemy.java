@@ -296,13 +296,11 @@ public class TestEnemy extends Enemy {
 	public boolean canMove(Vec2 newPos) {
 		this.collisionState = RectCollisionSide.NONE;
 		BoundRect rect = new BoundRect(newPos.getX(), newPos.getY(), this.getBoundingBox().getWidth(), this.getBoundingBox().getHeight());
+		if (rect.intersects(this.getStage().getPlayer().getBoundingBox())) this.getStage().playerDied();
 		for (CopyOnWriteArrayList<Entity> entities : this.getStage().getEntities().values()) {
 			for (Entity e : entities) {
 				if (e == this) continue;
 				if (rect.intersects(e.getBoundingBox())) {
-					if (Player.class.isAssignableFrom(e.getSourceClass())) {
-						//this.getStage().playerDied();
-					}
 					if ((this.collisionState != RectCollisionSide.LEFT) && (this.collisionState != RectCollisionSide.RIGHT)) {
 						this.collisionState = rect.whichSideIntersected(e.getBoundingBox());
 					}
