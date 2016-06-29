@@ -11,11 +11,8 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import com.greenteam.spacefighters.entity.entityliving.starship.player.Player;
-import com.greenteam.spacefighters.entity.entityliving.starship.player.Player.PlayerShipColor;
 import com.greenteam.spacefighters.stage.LevelLoader;
 import com.greenteam.spacefighters.stage.Stage;
-import com.greenteam.spacefighters.GUI.tutorial.*;
 
 public class Window extends JFrame implements WindowListener {
 	private static final long serialVersionUID = 8514984102701282740L;
@@ -25,13 +22,7 @@ public class Window extends JFrame implements WindowListener {
 	public static final double FPS = 60;
 	public static final String TITLE_SCREEN = "TITLE";
 	public static final String STAGE = "STAGE";
-	public static final String STORESCREEN = "STORESCREEN";
-	public static final String MOVEMENT_TUTORIAL = "MOVEMENT";
-	public static final String PROJECTILE_TUTORIAL = "PROJECTILE";
-	public static final String ENEMY_TUTORIAL = "ENEMY";
-	public static final String POWERUPTUTORIAL = "POWERUP";
 	public static final String GAMEOVERSCREEN = "GAMEOVERSCREEN";
-	public static final String SETTINGSSCREEN = "SETTINGSSCREEN";
 	public static final String LEVELINCREMENTSCREEN = "LEVELINCREMENTSCREEN";
 	public static final String DEATHSCREEN = "DEATHSCREEN";
 	public static final String WINSCREEN = "WINSCREEN";
@@ -39,14 +30,9 @@ public class Window extends JFrame implements WindowListener {
 	private Stage stage;
 	private LevelLoader loader;
 	private TitleScreen title;
-	private InputTutorialScreen movementTutorial; 
-	private ProjectileTutorialScreen projectileTutorial; 
-	private EnemyTutorialScreen enemyTutorial; 
-	private PowerupTutorialScreen powerupTutorial; 
 	private GameOverScreen gameover;
 	private LevelIncrementScreen levelscreen;
 	private DeathScreen deathscreen;
-	private SettingsScreen settings;
 	private WinScreen winscreen;
 	private boolean mouseInput;
 	
@@ -58,29 +44,19 @@ public class Window extends JFrame implements WindowListener {
 		KeyboardInputHandlerHolder.handler = new KeyboardInputHandler(contentPane);
 		
 		loader = new LevelLoader(this, Window.WIDTH, Window.HEIGHT, null);
-		movementTutorial = new InputTutorialScreen(this);
-		projectileTutorial = new ProjectileTutorialScreen(this); 
-		enemyTutorial = new EnemyTutorialScreen(this);
-		powerupTutorial = new PowerupTutorialScreen(this);
 		stage = loader.getStage();
 		title = new TitleScreen(this);
 		gameover = new GameOverScreen(stage, this);
 		levelscreen = new LevelIncrementScreen(stage);
 		deathscreen = new DeathScreen(stage);
-		settings = new SettingsScreen(this);
 		winscreen = new WinScreen(stage);
 		
-		contentPane.add(powerupTutorial, POWERUPTUTORIAL);
-		contentPane.add(enemyTutorial, ENEMY_TUTORIAL);
-		contentPane.add(projectileTutorial, PROJECTILE_TUTORIAL);
-		contentPane.add(movementTutorial, MOVEMENT_TUTORIAL);
 		contentPane.add(title, TITLE_SCREEN);
 		contentPane.add(stage, STAGE);
 		contentPane.setBounds(new Rectangle(Window.WIDTH, Window.HEIGHT));
 		contentPane.add(gameover, GAMEOVERSCREEN);
 		contentPane.add(levelscreen, LEVELINCREMENTSCREEN);
 		contentPane.add(deathscreen, DEATHSCREEN);
-		contentPane.add(settings, SETTINGSSCREEN);
 		contentPane.add(winscreen, WINSCREEN);
 		
 		((CardLayout)contentPane.getLayout()).show(contentPane, TITLE_SCREEN);
